@@ -16,6 +16,7 @@ export default function Home() {
     return `${year}-${month}-${day}`;
   };
   const [date, setDate] = useState(getFullDate(new Date()));
+  const [period, setPeriod] = useState(0);
   const [importance, setImportance] = useState(1);
   const [title, setTitle] = useState("");
   const [todo, setTodo] = useState("");
@@ -32,6 +33,15 @@ export default function Home() {
     } = event;
     setTodo(value);
   };
+  const onPeriodChange = (event: React.FormEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { value },
+    } = event;
+    const today = new Date();
+    const lastDay = new Date(value);
+    const periodDate = Math.round((+lastDay - +today) / 1000 / 3600 / 24);
+    setPeriod(periodDate);
+  };
   return (
     <div>
       {todos.length === 0 ? (
@@ -39,15 +49,15 @@ export default function Home() {
           <h3 className="text-xl font-bold text-white text-center">
             새로운 계획
           </h3>
-          <div className="grid grid-cols-2 mt-8">
+          <div className="grid grid-cols-2 items-center mt-8">
             <div className="ml-6">
               <div
                 className={[
-                  "flex flex-col w-56 h-80 rounded-xl shadow-2xl p-4",
+                  "flex flex-col w-56 h-80 rounded-xl shadow-2xl p-4 relative",
                   `bg-${bgColor}-500`,
                 ].join(" ")}
               >
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center ">
                   <span className="text-xs text-white">{date}</span>
                   <div className="text-xs">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -67,6 +77,9 @@ export default function Home() {
                 </div>
                 <div className="text-white mt-4">
                   <div className="break-words">{todo}</div>
+                </div>
+                <div className="text-sm text-white mt-4 absolute bottom-2 right-4">
+                  <div>{period}일 남음</div>
                 </div>
               </div>
             </div>
@@ -88,6 +101,14 @@ export default function Home() {
                     className="px-2 py-1 border-none rounded-xl focus:outline-none"
                     value={todo}
                     onChange={onToDoChange}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-white">기간</label>
+                  <input
+                    type="date"
+                    className="px-2 py-1 border-none rounded-xl focus:outline-none"
+                    onChange={onPeriodChange}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
