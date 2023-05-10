@@ -6,7 +6,7 @@ export default function Enter() {
     router.push("/");
   };
   return (
-    <div className="mt-16 px-4">
+    <div className="max-w-md mx-auto mt-16 px-4">
       <h3 className="text-3xl text-center font-bold text-white">Enter</h3>
       <form className="flex flex-col mt-8 space-y-4">
         <input
