@@ -1,63 +1,15 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
-const todos = [
+const diarys = [
   {
     id: 1,
-    title: "점심 먹기",
-    todo: "옥수수 스프 먹기",
+    title: "게임을 샀다",
+    todo: "왕눈을 샀다.",
     date: new Date(),
-    period: 0,
-    importance: 3,
-    bgColor: "blue",
-  },
-  {
-    id: 2,
-    title: "점심 먹기",
-    todo: "옥수수 스프 먹기",
-    date: new Date(),
-    period: 0,
-    importance: 3,
     bgColor: "red",
   },
-  {
-    id: 3,
-    title: "점심 먹기",
-    todo: "옥수수 스프 먹기",
-    date: new Date(),
-    period: 0,
-    importance: 3,
-    bgColor: "slate",
-  },
-  {
-    id: 4,
-    title: "점심 먹기",
-    todo: "옥수수 스프 먹기",
-    date: new Date(),
-    period: 0,
-    importance: 3,
-    bgColor: "green",
-  },
-  {
-    id: 5,
-    title: "점심 먹기",
-    todo: "옥수수 스프 먹기",
-    date: new Date(),
-    period: 0,
-    importance: 3,
-    bgColor: "yellow",
-  },
-  {
-    id: 6,
-    title: "점심 먹기",
-    todo: "옥수수 스프 먹기",
-    date: new Date(),
-    period: 0,
-    importance: 3,
-    bgColor: "yellow",
-  },
 ];
-
 export default function Home() {
   const getFullDate = (date: Date) => {
     const year = date.getFullYear();
@@ -69,7 +21,9 @@ export default function Home() {
       date.getDate().toString().length > 1
         ? date.getDate()
         : `0${date.getDate()}`;
-    return `${year}-${month}-${day}`;
+    const week = ["일", "월", "화", "수", "목", "금", "토"];
+    const weekOfDay = date.getDay();
+    return `${year}-${month}-${day} ${week[weekOfDay]}요일`;
   };
   const router = useRouter();
   const [addCard, setAddCard] = useState(false);
@@ -77,9 +31,8 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [todo, setTodo] = useState("");
   const [date, setDate] = useState(getFullDate(new Date()));
-  const [period, setPeriod] = useState(0);
-  const [importance, setImportance] = useState(1);
   const [bgColor, setBgColor] = useState("blue");
+  const [show, setShow] = useState(false);
   const onTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
@@ -92,14 +45,11 @@ export default function Home() {
     } = event;
     setTodo(value);
   };
-  const onPeriodChange = (event: React.FormEvent<HTMLInputElement>) => {
+  const onDateChange = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
     } = event;
-    const today = new Date();
-    const lastDay = new Date(value);
-    const periodDate = Math.round((+lastDay - +today) / 1000 / 3600 / 24);
-    setPeriod(periodDate);
+    setDate(getFullDate(new Date(value)));
   };
   const onAddCard = () => {
     setAddCard((pre) => !pre);
@@ -179,56 +129,153 @@ export default function Home() {
               </svg>
             </div>
             <ul className="w-full p-4">
-              <li className="flex justify-between group/list">
-                <span>메인</span>
-                <div className="hidden group-hover/list:flex items-center gap-2 ">
-                  <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-4 h-4 hover:text-slate-900"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
-                      />
-                    </svg>
+              <li className="flex flex-col group/list">
+                <div className="w-full flex justify-between ">
+                  <div className="flex gap-1 items-center">
+                    <div onClick={() => setShow((pre) => !pre)}>
+                      {show ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-5 h-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4.5 15.75l7.5-7.5 7.5 7.5"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-5 h-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                          />
+                        </svg>
+                      )}
+                    </div>
+                    <span>2023</span>
                   </div>
-                  <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-4 h-4 hover:text-slate-900"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                      />
-                    </svg>
+                  <div className="hidden group-hover/list:flex items-center gap-2 ">
+                    <div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 hover:text-slate-900"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 hover:text-slate-900"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 hover:text-slate-900"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                    </div>
                   </div>
-                  <div onClick={onAddCard}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-6 h-6 hover:text-slate-900"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
-                      />
-                    </svg>
+                </div>
+                <div
+                  className={[
+                    "flex-col opacity-70 pt-2 pl-4",
+                    show ? "flex" : "hidden",
+                  ].join(" ")}
+                >
+                  <div className="w-full flex justify-between group/datelist">
+                    <span>1월</span>
+                    <div className="hidden group-hover/datelist:flex items-center gap-2 ">
+                      <div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-4 h-4 hover:text-slate-900"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                          />
+                        </svg>
+                      </div>
+                      <div onClick={onAddCard}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-6 h-6 hover:text-slate-900"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 4.5v15m7.5-7.5h-15"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-4 h-4 hover:text-slate-900"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                          />
+                        </svg>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </li>
@@ -268,8 +315,8 @@ export default function Home() {
               메모
             </li>
           </ul>
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(14rem,max-content))] justify-center gap-8">
-            {todos.map((todo) => (
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(14rem,max-content))] justify-center items-center gap-8 ">
+            {diarys.map((todo) => (
               <div
                 key={todo.id}
                 className={[
@@ -277,33 +324,16 @@ export default function Home() {
                   `bg-${todo.bgColor}-500`,
                 ].join(" ")}
               >
-                <div className="flex justify-between items-center ">
+                <div className="flex justify-center items-center ">
                   <span className="text-xs text-white">
                     {getFullDate(todo.date)}
                   </span>
-                  <div className="text-xs">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <span
-                        key={star}
-                        className={
-                          todo.importance >= star
-                            ? "text-yellow-300"
-                            : "text-white"
-                        }
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
                 </div>
                 <div className="text-center text-lg font-bold text-white mt-4 break-words">
-                  {todo.title.length === 0 ? "무엇을 해야하나요?" : todo.title}
+                  {todo.title.length === 0 ? "무슨 일이 있었나요?" : todo.title}
                 </div>
                 <div className="text-white mt-4">
                   <div className="break-words">{todo.todo}</div>
-                </div>
-                <div className="text-sm text-white mt-4 absolute bottom-2 right-4">
-                  <div>{todo.period}일 남음</div>
                 </div>
                 <div className="absolute top-0 left-0 rounded-xl w-full h-full bg-[rgba(0,0,0,0.5)] hidden text-white group-hover/card:flex items-end justify-center">
                   <div className="flex gap-8 mb-12">
@@ -380,7 +410,7 @@ export default function Home() {
       >
         <div className="max-w-2xl bg-slate-600 mt-32 mx-auto p-8 rounded-xl shadow-2xl">
           <h3 className="text-xl font-bold text-white text-center">
-            새로운 계획
+            새로운 다이어리
           </h3>
           <div className="grid grid-cols-2 items-center mt-8">
             <div className="ml-6">
@@ -390,29 +420,14 @@ export default function Home() {
                   `bg-${bgColor}-500`,
                 ].join(" ")}
               >
-                <div className="flex justify-between items-center ">
-                  <span className="text-xs text-white">{date}</span>
-                  <div className="text-xs">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <span
-                        key={star}
-                        className={
-                          importance >= star ? "text-yellow-300" : "text-white"
-                        }
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
+                <div className="flex justify-center items-center ">
+                  <span className="text-sm text-white">{date}</span>
                 </div>
                 <div className="text-center text-lg font-bold text-white mt-4 break-words">
-                  {title.length === 0 ? "무엇을 해야하나요?" : title}
+                  {title.length === 0 ? "무슨 일이 있었나요?" : title}
                 </div>
                 <div className="text-white mt-4">
                   <div className="break-words">{todo}</div>
-                </div>
-                <div className="text-sm text-white mt-4 absolute bottom-2 right-4">
-                  <div>{period}일 남음</div>
                 </div>
               </div>
             </div>
@@ -437,102 +452,12 @@ export default function Home() {
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-white">기간</label>
+                  <label className="text-white">날짜</label>
                   <input
                     type="date"
                     className="px-2 py-1 border-none rounded-xl focus:outline-none"
-                    onChange={onPeriodChange}
+                    onChange={onDateChange}
                   />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-white">중요도</label>
-                  <div className="flex gap-1 text-xl">
-                    <div>
-                      <label
-                        htmlFor="1"
-                        className={
-                          importance >= 1 ? "text-yellow-300" : "text-white"
-                        }
-                      >
-                        ★
-                      </label>
-                      <input
-                        type="radio"
-                        id="1"
-                        name="star"
-                        className="hidden"
-                        onClick={() => setImportance(1)}
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="2"
-                        className={
-                          importance >= 2 ? "text-yellow-300" : "text-white"
-                        }
-                      >
-                        ★
-                      </label>
-                      <input
-                        type="radio"
-                        id="2"
-                        name="star"
-                        className="hidden"
-                        onClick={() => setImportance(2)}
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="3"
-                        className={
-                          importance >= 3 ? "text-yellow-300" : "text-white"
-                        }
-                      >
-                        ★
-                      </label>
-                      <input
-                        type="radio"
-                        id="3"
-                        name="star"
-                        className="hidden"
-                        onClick={() => setImportance(3)}
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="4"
-                        className={
-                          importance >= 4 ? "text-yellow-300" : "text-white"
-                        }
-                      >
-                        ★
-                      </label>
-                      <input
-                        type="radio"
-                        id="4"
-                        name="star"
-                        className="hidden"
-                        onClick={() => setImportance(4)}
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="5"
-                        className={
-                          importance >= 5 ? "text-yellow-300" : "text-white"
-                        }
-                      >
-                        ★
-                      </label>
-                      <input
-                        type="radio"
-                        id="5"
-                        name="star"
-                        className="hidden"
-                        onClick={() => setImportance(5)}
-                      />
-                    </div>
-                  </div>
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-white">배경색</label>
@@ -651,7 +576,7 @@ export default function Home() {
       >
         <div className="max-w-2xl bg-slate-600 mt-32 mx-auto p-8 rounded-xl shadow-2xl">
           <h3 className="text-xl font-bold text-white text-center">
-            계획 수정하기
+            다이어리 수정하기
           </h3>
           <div className="grid grid-cols-2 items-center mt-8">
             <div className="ml-6">
@@ -661,29 +586,14 @@ export default function Home() {
                   `bg-${bgColor}-500`,
                 ].join(" ")}
               >
-                <div className="flex justify-between items-center ">
-                  <span className="text-xs text-white">{date}</span>
-                  <div className="text-xs">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <span
-                        key={star}
-                        className={
-                          importance >= star ? "text-yellow-300" : "text-white"
-                        }
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
+                <div className="flex justify-center items-center ">
+                  <span className="text-sm text-white">{date}</span>
                 </div>
                 <div className="text-center text-lg font-bold text-white mt-4 break-words">
                   {title.length === 0 ? "무엇을 해야하나요?" : title}
                 </div>
                 <div className="text-white mt-4">
                   <div className="break-words">{todo}</div>
-                </div>
-                <div className="text-sm text-white mt-4 absolute bottom-2 right-4">
-                  <div>{period}일 남음</div>
                 </div>
               </div>
             </div>
@@ -708,102 +618,12 @@ export default function Home() {
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-white">기간</label>
+                  <label className="text-white">날짜</label>
                   <input
                     type="date"
                     className="px-2 py-1 border-none rounded-xl focus:outline-none"
-                    onChange={onPeriodChange}
+                    onChange={onDateChange}
                   />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-white">중요도</label>
-                  <div className="flex gap-1 text-xl">
-                    <div>
-                      <label
-                        htmlFor="1"
-                        className={
-                          importance >= 1 ? "text-yellow-300" : "text-white"
-                        }
-                      >
-                        ★
-                      </label>
-                      <input
-                        type="radio"
-                        id="1"
-                        name="star"
-                        className="hidden"
-                        onClick={() => setImportance(1)}
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="2"
-                        className={
-                          importance >= 2 ? "text-yellow-300" : "text-white"
-                        }
-                      >
-                        ★
-                      </label>
-                      <input
-                        type="radio"
-                        id="2"
-                        name="star"
-                        className="hidden"
-                        onClick={() => setImportance(2)}
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="3"
-                        className={
-                          importance >= 3 ? "text-yellow-300" : "text-white"
-                        }
-                      >
-                        ★
-                      </label>
-                      <input
-                        type="radio"
-                        id="3"
-                        name="star"
-                        className="hidden"
-                        onClick={() => setImportance(3)}
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="4"
-                        className={
-                          importance >= 4 ? "text-yellow-300" : "text-white"
-                        }
-                      >
-                        ★
-                      </label>
-                      <input
-                        type="radio"
-                        id="4"
-                        name="star"
-                        className="hidden"
-                        onClick={() => setImportance(4)}
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="5"
-                        className={
-                          importance >= 5 ? "text-yellow-300" : "text-white"
-                        }
-                      >
-                        ★
-                      </label>
-                      <input
-                        type="radio"
-                        id="5"
-                        name="star"
-                        className="hidden"
-                        onClick={() => setImportance(5)}
-                      />
-                    </div>
-                  </div>
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-white">배경색</label>
