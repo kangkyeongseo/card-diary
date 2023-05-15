@@ -3,10 +3,6 @@ import { useState } from "react";
 
 export default function Members() {
   const router = useRouter();
-  const [addMember, setAddMember] = useState(false);
-  const [editName, setEditName] = useState(false);
-  const [setting, setSetting] = useState(false);
-  const [deleteMember, setDeleteMember] = useState(false);
   return (
     <>
       <div className="w-full max-w-lg min-h-[500px] bg-slate-300 mt-16 mx-auto rounded-2xl shadow-2xl">
