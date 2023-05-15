@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 export default function Enter() {
@@ -7,7 +8,9 @@ export default function Enter() {
   };
   return (
     <div className="max-w-md mx-auto mt-16 px-4">
-      <h3 className="text-3xl text-center font-bold text-white">Enter</h3>
+      <h3 className="text-3xl text-center font-bold text-white uppercase">
+        card diary
+      </h3>
       <form className="flex flex-col mt-8 space-y-4">
         <input
           type="text"
@@ -29,9 +32,12 @@ export default function Enter() {
         </button>
       </form>
       <div className="text-center mt-4">
-        <span className="block bg-gray-500 hover:bg-gray-600 text-white rounded-md shadow-sm py-3 cursor-pointer">
+        <Link
+          href="/join"
+          className="block bg-gray-500 hover:bg-gray-600 text-white rounded-md shadow-sm py-3 cursor-pointer"
+        >
           Join
-        </span>
+        </Link>
       </div>
     </div>
   );
