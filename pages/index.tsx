@@ -75,6 +75,10 @@ export default function Home() {
   const router = useRouter();
   const [addCard, setAddCard] = useState(false);
   const [editCard, setEditCard] = useState(false);
+  const [newList, setNewList] = useState(false);
+  const [deleteList, setDeleteList] = useState(false);
+  const [changeName, setChangeName] = useState(false);
+  const [memberList, setMemberlist] = useState(false);
   const [title, setTitle] = useState("");
   const [todo, setTodo] = useState("");
   const [date, setDate] = useState(getFullDate(new Date()));
@@ -163,7 +167,7 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-col items-center text-white p-4">
-            <div className="self-end mb-4 ">
+            <div className="self-end mb-4" onClick={() => setNewList(true)}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -183,7 +187,7 @@ export default function Home() {
               <li className="flex justify-between group/list">
                 <span>메인</span>
                 <div className="hidden group-hover/list:flex items-center gap-2 ">
-                  <div>
+                  <div onClick={() => setChangeName(true)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -199,7 +203,23 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                  <div>
+                  <div onClick={() => setMemberlist(true)}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-4 h-4 hover:text-slate-900"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div onClick={() => setDeleteList(true)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -908,6 +928,154 @@ export default function Home() {
               수정하기
             </button>
           </div>
+        </div>
+      </div>
+      <div
+        className={[
+          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
+          newList ? "block" : "hidden",
+        ].join(" ")}
+      >
+        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
+          <div className="flex justify-end">
+            <div className="cursor-pointer" onClick={() => setNewList(false)}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+          <div className="text-center mb-2">
+            <span>새로운 계획 리스트의 이름을 적어주세요.</span>
+          </div>
+          <form className="px-4">
+            <input
+              type="text"
+              placeholder="새로운 계획"
+              className="w-full px-4 py-2 text-black rounded-xl shadow-2xl focus:outline-none"
+            />
+          </form>
+        </div>
+      </div>
+      <div
+        className={[
+          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
+          changeName ? "block" : "hidden",
+        ].join(" ")}
+      >
+        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
+          <div className="flex justify-end">
+            <div
+              className="cursor-pointer"
+              onClick={() => setChangeName(false)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+          <div className="text-center mb-2">
+            <span>리스트의 이름을 변경해주세요.</span>
+          </div>
+          <form className="px-4">
+            <input
+              type="text"
+              placeholder="변경할 이름"
+              className="w-full px-4 py-2 text-black rounded-xl shadow-2xl focus:outline-none"
+            />
+          </form>
+        </div>
+      </div>
+      <div
+        className={[
+          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
+          memberList ? "block" : "hidden",
+        ].join(" ")}
+      >
+        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
+          <div className="flex justify-end">
+            <div
+              className="cursor-pointer"
+              onClick={() => setMemberlist(false)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+          <div className="text-center mb-8">
+            <span>리스트를 맴버와 공유하세요.</span>
+          </div>
+          <form className="px-4">
+            <div className="flex justify-between items-center px-2 ">
+              <div>
+                <h5>김미연</h5>
+              </div>
+              <input type="checkbox" id="메인" className="hidden peer/plan" />
+              <label
+                htmlFor="메인"
+                className="cursor-pointer border px-2 py-1 rounded-2xl text-gray-400 border-gray-400 peer-checked/plan:text-blue-500 peer-checked/plan:border-blue-500"
+              >
+                공유하기
+              </label>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div
+        className={[
+          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
+          deleteList ? "block" : "hidden",
+        ].join(" ")}
+      >
+        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
+          <div className="text-center mt-4 mb-4">
+            <span>정말 삭제하시겠습니까?</span>
+          </div>
+          <form className="flex justify-center gap-4">
+            <input
+              type="submit"
+              value="취소하기"
+              className="cursor-pointer px-4 py-1 rounded-2xl bg-slate-200 text-black hover:bg-slate-300"
+            />
+            <input
+              type="submit"
+              value="삭제하기"
+              className="cursor-pointer px-4 py-1 rounded-2xl bg-red-500 hover:bg-red-600"
+            />
+          </form>
         </div>
       </div>
     </div>
