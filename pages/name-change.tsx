@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-export default function Members() {
+export default function NameChange() {
   const router = useRouter();
   return (
     <>
@@ -25,19 +24,24 @@ export default function Members() {
             </svg>
           </div>
           <div className="justify-self-center">
-            <h3 className="text-lg font-bold">설정</h3>
+            <h3 className="text-lg font-bold">닉네임 변경</h3>
           </div>
         </div>
-        <div className="text-center font-bold text-xl mt-12">
-          <h5>안녕하세요, 이름</h5>
-        </div>
-        <ul className="flex flex-col justify-center items-center  gap-2 mt-8 text-gray-700">
-          <li className="cursor-pointer hover:text-gray-900">
-            <Link href={"/name-change"}>닉네임 변경</Link>
-          </li>
-          <li className="cursor-pointer hover:text-gray-900">비밀번호 변경</li>
-          <li className="cursor-pointer hover:text-gray-900">로그아웃</li>
-        </ul>
+        <form className="flex flex-col gap-3 px-8 mt-12">
+          <div className="relative flex items-center">
+            <div className="absolute left-4">
+              <span className="text-gray-500">닉네임</span>
+            </div>
+            <input
+              type="text"
+              className="w-full px-28 py-2 border placeholder-gray-400 rounded-2xl shadow-md focus:outline-none"
+              required
+            />
+          </div>
+          <button className="bg-blue-500 hover:bg-blue-600 text-white rounded-2xl shadow-md py-3">
+            닉네임 변경하기
+          </button>
+        </form>
       </div>
     </>
   );
