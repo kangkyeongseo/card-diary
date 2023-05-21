@@ -293,9 +293,10 @@ export default function Home() {
           <div className="grid grid-cols-[repeat(auto-fit,minmax(14rem,max-content))] justify-center gap-8">
             {todos.map((todo) => (
               <Card
+                key={todo.id}
                 id={todo.id}
                 title={todo.title}
-                todo={todo.todo}
+                contents={todo.todo}
                 date={todo.date}
                 period={todo.period}
                 importance={todo.importance}
