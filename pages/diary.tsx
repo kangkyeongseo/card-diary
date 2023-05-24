@@ -1,6 +1,8 @@
 import AddCard from "@/components/AddCard";
 import Card from "@/components/Card";
 import EditCard from "@/components/EditCard";
+import Popup from "@/components/Popuo";
+import useDate from "@/libs/client/useDate";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -15,30 +17,16 @@ const diarys = [
   },
 ];
 export default function Home() {
-  const getFullDate = (date: Date) => {
-    const year = date.getFullYear();
-    const month =
-      (date.getMonth() + 1).toString().length > 1
-        ? date.getMonth() + 1
-        : `0${date.getMonth() + 1}`;
-    const day =
-      date.getDate().toString().length > 1
-        ? date.getDate()
-        : `0${date.getDate()}`;
-    const week = ["일", "월", "화", "수", "목", "금", "토"];
-    const weekOfDay = date.getDay();
-    return `${year}-${month}-${day} ${week[weekOfDay]}요일`;
-  };
   const router = useRouter();
   const [addCard, setAddCard] = useState(false);
   const [editCard, setEditCard] = useState(false);
-  const [newList, setNewList] = useState(false);
+  const [addList, setAddList] = useState(false);
+  const [editList, setEditList] = useState(false);
   const [deleteList, setDeleteList] = useState(false);
-  const [changeName, setChangeName] = useState(false);
   const [addChildList, setAddChildList] = useState(false);
   const [title, setTitle] = useState("");
   const [todo, setTodo] = useState("");
-  const [date, setDate] = useState(getFullDate(new Date()));
+  const [date, setDate] = useState(useDate(new Date()));
   const [bgColor, setBgColor] = useState("blue");
   const [show, setShow] = useState(false);
   const onTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -57,7 +45,7 @@ export default function Home() {
     const {
       currentTarget: { value },
     } = event;
-    setDate(getFullDate(new Date(value)));
+    setDate(useDate(new Date(value)));
   };
   const onAddCard = () => {
     setAddCard((pre) => !pre);
@@ -120,7 +108,7 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-col items-center text-white p-4">
-            <div className="self-end mb-4" onClick={() => setNewList(true)}>
+            <div className="self-end mb-4" onClick={() => setAddList(true)}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -176,7 +164,7 @@ export default function Home() {
                     <span>2023</span>
                   </div>
                   <div className="hidden group-hover/list:flex items-center gap-2 ">
-                    <div onClick={() => setChangeName(true)}>
+                    <div onClick={() => setEditList(true)}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -235,7 +223,7 @@ export default function Home() {
                   <div className="w-full flex justify-between group/datelist">
                     <span>1월</span>
                     <div className="hidden group-hover/datelist:flex items-center gap-1 ">
-                      <div onClick={() => setChangeName(true)}>
+                      <div onClick={() => setEditList(true)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -360,6 +348,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      {/* 카드 추가하기 */}
       {addCard ? (
         <AddCard
           title={title}
@@ -374,6 +363,7 @@ export default function Home() {
           kind="diary"
         />
       ) : null}
+      {/* 카드 수정하기 */}
       {editCard ? (
         <EditCard
           title={title}
@@ -387,147 +377,16 @@ export default function Home() {
           kind="diary"
         />
       ) : null}
-      <div
-        className={[
-          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
-          newList ? "block" : "hidden",
-        ].join(" ")}
-      >
-        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
-          <div className="flex justify-end">
-            <div className="cursor-pointer" onClick={() => setNewList(false)}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="text-center mb-2">
-            <span>새로운 다이어리 리스트의 이름을 적어주세요.</span>
-          </div>
-          <form className="px-4">
-            <input
-              type="text"
-              placeholder="새로운 다이어리"
-              className="w-full px-4 py-2 text-black rounded-xl shadow-2xl focus:outline-none"
-            />
-          </form>
-        </div>
-      </div>
-      <div
-        className={[
-          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
-          changeName ? "block" : "hidden",
-        ].join(" ")}
-      >
-        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
-          <div className="flex justify-end">
-            <div
-              className="cursor-pointer"
-              onClick={() => setChangeName(false)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="text-center mb-2">
-            <span>리스트의 이름을 변경해주세요.</span>
-          </div>
-          <form className="px-4">
-            <input
-              type="text"
-              placeholder="변경할 이름"
-              className="w-full px-4 py-2 text-black rounded-xl shadow-2xl focus:outline-none"
-            />
-          </form>
-        </div>
-      </div>
-      <div
-        className={[
-          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
-          addChildList ? "block" : "hidden",
-        ].join(" ")}
-      >
-        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
-          <div className="flex justify-end">
-            <div
-              className="cursor-pointer"
-              onClick={() => setAddChildList(false)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="text-center mb-2">
-            <span>하위 항목을 생성하세요.</span>
-          </div>
-          <form className="px-4">
-            <input
-              type="text"
-              placeholder="하위 항목 이름"
-              className="w-full px-4 py-2 text-black rounded-xl shadow-2xl focus:outline-none"
-            />
-          </form>
-        </div>
-      </div>
-      <div
-        className={[
-          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
-          deleteList ? "block" : "hidden",
-        ].join(" ")}
-      >
-        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
-          <div className="text-center mt-4 mb-4">
-            <span>정말 삭제하시겠습니까?</span>
-          </div>
-          <form className="flex justify-center gap-4">
-            <input
-              type="submit"
-              value="취소하기"
-              className="cursor-pointer px-4 py-1 rounded-2xl bg-slate-200 text-black hover:bg-slate-300"
-            />
-            <input
-              type="submit"
-              value="삭제하기"
-              className="cursor-pointer px-4 py-1 rounded-2xl bg-red-500 hover:bg-red-600"
-            />
-          </form>
-        </div>
-      </div>
+      {/* 리스트 추가하기 */}
+      {addList ? <Popup setAddList={setAddList} /> : null}
+      {/* 리스트 이름 수정하기 */}
+      {editList ? <Popup setEditList={setEditList} kind="edit" /> : null}
+      {/* 리스트 삭제하기 */}
+      {deleteList ? <Popup kind="delete" /> : null}
+      {/* 하위 리스트 추가하기 */}
+      {addChildList ? (
+        <Popup setAddChildList={setAddChildList} childList={true} />
+      ) : null}
     </div>
   );
 }

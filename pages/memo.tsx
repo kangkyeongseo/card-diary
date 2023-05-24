@@ -1,5 +1,8 @@
 import AddCard from "@/components/AddCard";
 import Card from "@/components/Card";
+import EditCard from "@/components/EditCard";
+import Popup from "@/components/Popuo";
+import useDate from "@/libs/client/useDate";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -14,29 +17,15 @@ const memos = [
   },
 ];
 export default function Home() {
-  const getFullDate = (date: Date) => {
-    const year = date.getFullYear();
-    const month =
-      (date.getMonth() + 1).toString().length > 1
-        ? date.getMonth() + 1
-        : `0${date.getMonth() + 1}`;
-    const day =
-      date.getDate().toString().length > 1
-        ? date.getDate()
-        : `0${date.getDate()}`;
-    const week = ["일", "월", "화", "수", "목", "금", "토"];
-    const weekOfDay = date.getDay();
-    return `${year}-${month}-${day} ${week[weekOfDay]}요일`;
-  };
   const router = useRouter();
   const [addCard, setAddCard] = useState(false);
   const [editCard, setEditCard] = useState(false);
-  const [newList, setNewList] = useState(false);
-  const [changeName, setChangeName] = useState(false);
+  const [addList, setAddList] = useState(false);
+  const [editList, setEditList] = useState(false);
   const [deleteList, setDeleteList] = useState(false);
   const [title, setTitle] = useState("");
   const [todo, setTodo] = useState("");
-  const [date, setDate] = useState(getFullDate(new Date()));
+  const [date, setDate] = useState(useDate(new Date()));
   const [bgColor, setBgColor] = useState("blue");
   const onTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
     const {
@@ -54,7 +43,7 @@ export default function Home() {
     const {
       currentTarget: { value },
     } = event;
-    setDate(getFullDate(new Date(value)));
+    setDate(useDate(new Date(value)));
   };
   const onAddCard = () => {
     setAddCard((pre) => !pre);
@@ -117,7 +106,7 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-col items-center text-white p-4">
-            <div className="self-end mb-4" onClick={() => setNewList(true)}>
+            <div className="self-end mb-4" onClick={() => setAddList(true)}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -137,7 +126,7 @@ export default function Home() {
               <li className="flex justify-between group/list">
                 <span>메인</span>
                 <div className="hidden group-hover/list:flex items-center gap-2 ">
-                  <div onClick={() => setChangeName(true)}>
+                  <div onClick={() => setEditList(true)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -260,6 +249,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      {/* 카드 추가하기 */}
       {addCard ? (
         <AddCard
           title={title}
@@ -274,273 +264,26 @@ export default function Home() {
           kind="memo"
         />
       ) : null}
-      <div
-        className={[
-          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
-          editCard ? "" : "hidden",
-        ].join(" ")}
-      >
-        <div className="max-w-2xl bg-slate-600 mt-32 mx-auto p-8 rounded-xl shadow-2xl">
-          <h3 className="text-xl font-bold text-white text-center">
-            메모 수정하기
-          </h3>
-          <div className="grid grid-cols-2 items-center mt-8">
-            <div className="ml-6">
-              <div
-                className={[
-                  "flex flex-col w-56 h-80 rounded-xl shadow-2xl p-4 relative",
-                  `bg-${bgColor}-500`,
-                ].join(" ")}
-              >
-                <div className="flex justify-center items-center ">
-                  <span className="text-sm text-white">{date}</span>
-                </div>
-                <div className="text-center text-lg font-bold text-white mt-4 break-words">
-                  {title.length === 0 ? "메모" : title}
-                </div>
-                <div className="text-white mt-4">
-                  <div className="break-words">{todo}</div>
-                </div>
-              </div>
-            </div>
-            <div>
-              <form className="flex flex-col gap-2">
-                <div className="flex flex-col gap-2">
-                  <label className="text-white">제목</label>
-                  <input
-                    type="text"
-                    className="px-2 py-1 border-none rounded-xl focus:outline-none"
-                    value={title}
-                    onChange={onTitleChange}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-white">내용</label>
-                  <input
-                    type="text"
-                    className="px-2 py-1 border-none rounded-xl focus:outline-none"
-                    value={todo}
-                    onChange={onToDoChange}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-white">날짜</label>
-                  <input
-                    type="date"
-                    className="px-2 py-1 border-none rounded-xl focus:outline-none"
-                    onChange={onDateChange}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-white">배경색</label>
-                  <div className="flex gap-4">
-                    <div>
-                      <label htmlFor="blue">
-                        <div
-                          className={[
-                            "w-12 h-12 rounded-lg bg-blue-500",
-                            bgColor === "blue" ? "border-2 border-white" : "",
-                          ].join(" ")}
-                        ></div>
-                      </label>
-                      <input
-                        type="radio"
-                        id="blue"
-                        name="bgColor"
-                        className="hidden"
-                        onClick={() => setBgColor("blue")}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="green">
-                        <div
-                          className={[
-                            "w-12 h-12 rounded-lg bg-green-500",
-                            bgColor === "green" ? "border-2 border-white" : "",
-                          ].join(" ")}
-                        ></div>
-                      </label>
-                      <input
-                        type="radio"
-                        id="green"
-                        name="bgColor"
-                        className="hidden"
-                        onClick={() => setBgColor("green")}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="yellow">
-                        <div
-                          className={[
-                            "w-12 h-12 rounded-lg bg-yellow-500",
-                            bgColor === "yellow" ? "border-2 border-white" : "",
-                          ].join(" ")}
-                        ></div>
-                      </label>
-                      <input
-                        type="radio"
-                        id="yellow"
-                        name="bgColor"
-                        className="hidden"
-                        onClick={() => setBgColor("yellow")}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="slate">
-                        <div
-                          className={[
-                            "w-12 h-12 rounded-lg bg-slate-500",
-                            bgColor === "slate" ? "border-2 border-white" : "",
-                          ].join(" ")}
-                        ></div>
-                      </label>
-                      <input
-                        type="radio"
-                        id="slate"
-                        name="bgColor"
-                        className="hidden"
-                        onClick={() => setBgColor("slate")}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="red">
-                        <div
-                          className={[
-                            "w-12 h-12 rounded-lg bg-red-500",
-                            bgColor === "red" ? "border-2 border-white" : "",
-                          ].join(" ")}
-                        ></div>
-                      </label>
-                      <input
-                        type="radio"
-                        id="red"
-                        name="bgColor"
-                        className="hidden"
-                        onClick={() => setBgColor("red")}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-          <div className="flex justify-between mt-8">
-            <button
-              className="w-72 p-2 rounded-xl bg-white hover:bg-gray-200"
-              onClick={onEditCard}
-            >
-              취소하기
-            </button>
-            <button
-              className="w-72 p-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600"
-              onClick={onEditCard}
-            >
-              수정하기
-            </button>
-          </div>
-        </div>
-      </div>
-      <div
-        className={[
-          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
-          newList ? "block" : "hidden",
-        ].join(" ")}
-      >
-        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
-          <div className="flex justify-end">
-            <div className="cursor-pointer" onClick={() => setNewList(false)}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="text-center mb-2">
-            <span>새로운 메모 리스트의 이름을 적어주세요.</span>
-          </div>
-          <form className="px-4">
-            <input
-              type="text"
-              placeholder="새로운 메모"
-              className="w-full px-4 py-2 text-black rounded-xl shadow-2xl focus:outline-none"
-            />
-          </form>
-        </div>
-      </div>
-      <div
-        className={[
-          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
-          changeName ? "block" : "hidden",
-        ].join(" ")}
-      >
-        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
-          <div className="flex justify-end">
-            <div
-              className="cursor-pointer"
-              onClick={() => setChangeName(false)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="text-center mb-2">
-            <span>리스트의 이름을 변경해주세요.</span>
-          </div>
-          <form className="px-4">
-            <input
-              type="text"
-              placeholder="변경할 이름"
-              className="w-full px-4 py-2 text-black rounded-xl shadow-2xl focus:outline-none"
-            />
-          </form>
-        </div>
-      </div>
-      <div
-        className={[
-          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
-          deleteList ? "block" : "hidden",
-        ].join(" ")}
-      >
-        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
-          <div className="text-center mt-4 mb-4">
-            <span>정말 삭제하시겠습니까?</span>
-          </div>
-          <form className="flex justify-center gap-4">
-            <input
-              type="submit"
-              value="취소하기"
-              className="cursor-pointer px-4 py-1 rounded-2xl bg-slate-200 text-black hover:bg-slate-300"
-            />
-            <input
-              type="submit"
-              value="삭제하기"
-              className="cursor-pointer px-4 py-1 rounded-2xl bg-red-500 hover:bg-red-600"
-            />
-          </form>
-        </div>
-      </div>
+      {/* 카드 수정하기 */}
+      {editCard ? (
+        <EditCard
+          title={title}
+          contents={todo}
+          date={date}
+          bgColor={bgColor}
+          onTitleChange={onTitleChange}
+          onContentsChange={onToDoChange}
+          setBgColor={setBgColor}
+          onEditCard={onEditCard}
+          kind="memo"
+        />
+      ) : null}
+      {/* 리스트 추가하기 */}
+      {addList ? <Popup setAddList={setAddList} /> : null}
+      {/* 리스트 이름 수정하기 */}
+      {editList ? <Popup setEditList={setEditList} kind="edit" /> : null}
+      {/* 리스트 삭제하기 */}
+      {deleteList ? <Popup kind="delete" /> : null}
     </div>
   );
 }
