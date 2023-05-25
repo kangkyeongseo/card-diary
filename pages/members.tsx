@@ -1,11 +1,12 @@
+import Popup from "@/components/Popuo";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
 export default function Members() {
   const router = useRouter();
   const [addMember, setAddMember] = useState(false);
-  const [editName, setEditName] = useState(false);
-  const [setting, setSetting] = useState(false);
+  const [editMember, setEditMember] = useState(false);
+  const [memberSetting, setMemberSetting] = useState(false);
   const [deleteMember, setDeleteMember] = useState(false);
   return (
     <>
@@ -51,12 +52,12 @@ export default function Members() {
           </div>
         </div>
         <ul className="flex flex-col gap-2 p-4 ">
-          <li className="flex justify-between px-8 py-6 border border-slate-500 bg-slate-200 shadow-sm rounded-xl  relative  ">
+          <li className="flex justify-between px-8 py-6 border border-slate-500 bg-slate-200 shadow-sm rounded-xl relative  ">
             <div>
               <span>김미연</span>
             </div>
             <div className="flex justify-center items-center gap-2">
-              <div onClick={() => setEditName(true)}>
+              <div onClick={() => setEditMember(true)}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -72,7 +73,7 @@ export default function Members() {
                   />
                 </svg>
               </div>
-              <div onClick={() => setSetting(true)}>
+              <div onClick={() => setMemberSetting(true)}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -113,148 +114,18 @@ export default function Members() {
           </li>
         </ul>
       </div>
-      <div
-        className={[
-          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
-          addMember ? "block" : "hidden",
-        ].join(" ")}
-      >
-        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
-          <div className="flex justify-end">
-            <div className="cursor-pointer" onClick={() => setAddMember(false)}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="text-center mb-2">
-            <span>구성원으로 추가 할 회원의 아이디를 검색해주세요.</span>
-          </div>
-          <form className="px-4">
-            <input
-              type="text"
-              placeholder="아이디 검색"
-              className="w-full px-4 py-2 text-black rounded-xl shadow-2xl focus:outline-none"
-            />
-          </form>
-        </div>
-      </div>
-      <div
-        className={[
-          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
-          editName ? "block" : "hidden",
-        ].join(" ")}
-      >
-        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
-          <div className="flex justify-end">
-            <div className="cursor-pointer" onClick={() => setEditName(false)}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="text-center mb-2">
-            <span>맴버의 이름을 변경해주세요.</span>
-          </div>
-          <form className="px-4">
-            <input
-              type="text"
-              placeholder="변경할 이름"
-              className="w-full px-4 py-2 text-black rounded-xl shadow-2xl focus:outline-none"
-            />
-          </form>
-        </div>
-      </div>
-      <div
-        className={[
-          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
-          setting ? "block" : "hidden",
-        ].join(" ")}
-      >
-        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
-          <div className="flex justify-end">
-            <div className="cursor-pointer" onClick={() => setSetting(false)}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="text-center mb-8">
-            <span>김미연님과 공유할 계획이 있나요?</span>
-          </div>
-          <form className="px-4">
-            <div className="flex justify-between items-center px-2 ">
-              <div>
-                <h5>메인</h5>
-              </div>
-              <input type="checkbox" id="메인" className="hidden peer/plan" />
-              <label
-                htmlFor="메인"
-                className="cursor-pointer border px-2 py-1 rounded-2xl text-gray-400 border-gray-400 peer-checked/plan:text-blue-500 peer-checked/plan:border-blue-500"
-              >
-                공유하기
-              </label>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div
-        className={[
-          "fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10",
-          deleteMember ? "block" : "hidden",
-        ].join(" ")}
-      >
-        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
-          <div className="text-center mt-4 mb-4">
-            <span>정말 삭제하시겠습니까?</span>
-          </div>
-          <form className="flex justify-center gap-4">
-            <input
-              type="submit"
-              value="취소하기"
-              className="cursor-pointer px-4 py-1 rounded-2xl bg-slate-200 text-black hover:bg-slate-300"
-            />
-            <input
-              type="submit"
-              value="삭제하기"
-              className="cursor-pointer px-4 py-1 rounded-2xl bg-red-500 hover:bg-red-600"
-            />
-          </form>
-        </div>
-      </div>
+      {/* 맴버 추가하기 */}
+      {addMember ? <Popup setAddList={setAddMember} memberList={true} /> : null}
+      {/* 맴버 이름 수정하기 */}
+      {editMember ? (
+        <Popup setEditList={setEditMember} memberList={true} kind="edit" />
+      ) : null}
+      {/* 맴버 삭제하기 */}
+      {deleteMember ? <Popup kind="delete" /> : null}
+      {/* 리스트 맴버 관리 */}
+      {memberSetting ? (
+        <Popup setMemberlist={setMemberSetting} kind="member" />
+      ) : null}
     </>
   );
 }

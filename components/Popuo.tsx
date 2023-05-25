@@ -4,6 +4,7 @@ interface PopupProp {
   setMemberlist?: (value: React.SetStateAction<boolean>) => void;
   setAddChildList?: (value: React.SetStateAction<boolean>) => void;
   childList?: boolean;
+  memberList?: boolean;
   kind?: "add" | "edit" | "delete" | "member";
 }
 
@@ -13,6 +14,7 @@ export default function Popup({
   setMemberlist,
   setAddChildList,
   childList,
+  memberList,
   kind = "add",
 }: PopupProp) {
   return (
@@ -48,13 +50,21 @@ export default function Popup({
             <span>
               {childList
                 ? "하위 항목을 생성하세요."
+                : memberList
+                ? "새로운 맴버를 추가해주세요."
                 : "새로운 리스트의 이름을 적어주세요."}
             </span>
           </div>
           <form className="px-4">
             <input
               type="text"
-              placeholder={childList ? "하위 항목 이름" : "새로운 리스트"}
+              placeholder={
+                childList
+                  ? "하위 항목 이름"
+                  : memberList
+                  ? "아이디 검색"
+                  : "새로운 리스트"
+              }
               className="w-full px-4 py-2 text-black rounded-xl shadow-2xl focus:outline-none"
             />
           </form>
@@ -81,7 +91,11 @@ export default function Popup({
             </div>
           </div>
           <div className="text-center mb-2">
-            <span>리스트의 이름을 변경해주세요.</span>
+            <span>
+              {memberList
+                ? "맴버의 이름을 변경해주세요."
+                : "리스트의 이름을 변경해주세요."}
+            </span>
           </div>
           <form className="px-4">
             <input
