@@ -1,9 +1,20 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+
+interface InfoSearchForm {
+  email: string;
+  userName?: string;
+  userId?: string;
+}
 
 export default function Members() {
   const router = useRouter();
+  const { register, handleSubmit } = useForm<InfoSearchForm>();
   const [find, setFind] = useState<"id" | "password">("id");
+  const onValid = (data: InfoSearchForm) => {
+    console.log(data);
+  };
   return (
     <>
       <div className="w-full max-w-lg min-h-[500px] bg-slate-300 mt-16 mx-auto rounded-2xl shadow-2xl">
@@ -50,59 +61,64 @@ export default function Members() {
             </li>
           </ul>
         </div>
-        {find === "id" ? (
-          <form className="flex flex-col gap-3 px-8 py-12">
-            <div className="relative flex items-center">
-              <div className="absolute left-4">
-                <span className="text-gray-500">이메일</span>
+        <form
+          className="flex flex-col gap-3 px-8 py-12"
+          onSubmit={handleSubmit(onValid)}
+        >
+          {find === "id" ? (
+            <>
+              <div className="relative flex items-center">
+                <div className="absolute left-4">
+                  <span className="text-gray-500">이메일</span>
+                </div>
+                <input
+                  {...register("email", { required: true })}
+                  type="email"
+                  className="w-full px-28 py-2 border placeholder-gray-400 rounded-2xl shadow-md focus:outline-none"
+                />
               </div>
-              <input
-                type="email"
-                className="w-full px-28 py-2 border placeholder-gray-400 rounded-2xl shadow-md focus:outline-none"
-                required
-              />
-            </div>
-            <div className="relative flex items-center">
-              <div className="absolute left-4">
-                <span className="text-gray-500">이름</span>
+              <div className="relative flex items-center">
+                <div className="absolute left-4">
+                  <span className="text-gray-500">이름</span>
+                </div>
+                <input
+                  {...register("userName", { required: true })}
+                  type="text"
+                  className="w-full px-28 py-2 border placeholder-gray-400 rounded-2xl shadow-md focus:outline-none"
+                />
               </div>
-              <input
-                type="text"
-                className="w-full px-28 py-2 border placeholder-gray-400 rounded-2xl shadow-md focus:outline-none"
-                required
-              />
-            </div>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white rounded-2xl shadow-md py-3">
-              아이디 찾기
-            </button>
-          </form>
-        ) : (
-          <form className="flex flex-col gap-3 px-8 py-12">
-            <div className="relative flex items-center">
-              <div className="absolute left-4">
-                <span className="text-gray-500">아이디</span>
+              <button className="bg-blue-500 hover:bg-blue-600 text-white rounded-2xl shadow-md py-3">
+                아이디 찾기
+              </button>
+            </>
+          ) : find === "password" ? (
+            <>
+              <div className="relative flex items-center">
+                <div className="absolute left-4">
+                  <span className="text-gray-500">아이디</span>
+                </div>
+                <input
+                  {...register("userId", { required: true })}
+                  type="text"
+                  className="w-full px-28 py-2 border placeholder-gray-400 rounded-2xl shadow-md focus:outline-none"
+                />
               </div>
-              <input
-                type="text"
-                className="w-full px-28 py-2 border placeholder-gray-400 rounded-2xl shadow-md focus:outline-none"
-                required
-              />
-            </div>
-            <div className="relative flex items-center">
-              <div className="absolute left-4">
-                <span className="text-gray-500">이메일</span>
+              <div className="relative flex items-center">
+                <div className="absolute left-4">
+                  <span className="text-gray-500">이메일</span>
+                </div>
+                <input
+                  {...register("email", { required: true })}
+                  type="email"
+                  className="w-full px-28 py-2 border placeholder-gray-400 rounded-2xl shadow-md focus:outline-none"
+                />
               </div>
-              <input
-                type="email"
-                className="w-full px-28 py-2 border placeholder-gray-400 rounded-2xl shadow-md focus:outline-none"
-                required
-              />
-            </div>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white rounded-2xl shadow-md py-3">
-              비밀번호 찾기
-            </button>
-          </form>
-        )}
+              <button className="bg-blue-500 hover:bg-blue-600 text-white rounded-2xl shadow-md py-3">
+                비밀번호 찾기
+              </button>
+            </>
+          ) : null}
+        </form>
       </div>
     </>
   );

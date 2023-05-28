@@ -1,7 +1,18 @@
 import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
+
+interface LoginForm {
+  userId: string;
+  password: string;
+}
 
 export default function Members() {
   const router = useRouter();
+  const { register, handleSubmit } = useForm<LoginForm>();
+  const onVaild = (data: LoginForm) => {
+    console.log(data);
+    router.push("/");
+  };
   return (
     <>
       <div className="w-full max-w-lg min-h-[500px] bg-slate-300 mt-16 mx-auto rounded-2xl shadow-2xl">
@@ -13,16 +24,16 @@ export default function Members() {
         <div className="flex flex-col gap-3 px-8">
           <form
             className="flex flex-col gap-3 pt-12"
-            onSubmit={() => router.push("/")}
+            onSubmit={handleSubmit(onVaild)}
           >
             <div className="relative flex items-center">
               <div className="absolute left-4">
                 <span className="text-gray-500">아이디</span>
               </div>
               <input
+                {...register("userId", { required: true })}
                 type="text"
                 className="w-full px-28 py-2 border placeholder-gray-400 rounded-2xl shadow-md focus:outline-none"
-                required
               />
             </div>
             <div className="relative flex items-center">
@@ -30,6 +41,7 @@ export default function Members() {
                 <span className="text-gray-500">비밀번호</span>
               </div>
               <input
+                {...register("password", { required: true })}
                 type="password"
                 className="w-full px-28 py-2 border placeholder-gray-400 rounded-2xl shadow-md focus:outline-none"
                 required
