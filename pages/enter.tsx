@@ -1,3 +1,4 @@
+import Input from "@/components/Input";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
@@ -26,16 +27,11 @@ export default function Members() {
             className="flex flex-col gap-3 pt-12"
             onSubmit={handleSubmit(onVaild)}
           >
-            <div className="relative flex items-center">
-              <div className="absolute left-4">
-                <span className="text-gray-500">아이디</span>
-              </div>
-              <input
-                {...register("userId", { required: true })}
-                type="text"
-                className="w-full px-28 py-2 border placeholder-gray-400 rounded-2xl shadow-md focus:outline-none"
-              />
-            </div>
+            <Input
+              label="아이디"
+              type="string"
+              register={register("userId", { required: true })}
+            />
             <div className="relative flex items-center">
               <div className="absolute left-4">
                 <span className="text-gray-500">비밀번호</span>
