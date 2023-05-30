@@ -43,11 +43,9 @@ export default function Members() {
                 required
               />
             </div>
-            <input
-              type="submit"
-              value="로그인"
-              className="bg-blue-500 hover:bg-blue-600 text-white rounded-2xl shadow-md py-3"
-            />
+            <button className="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-2xl shadow-md py-3">
+              가입하기
+            </button>
           </form>
           <button
             className="w-full bg-indigo-500 hover:bg-indigo-600 text-white rounded-2xl shadow-md py-3"
