@@ -33,18 +33,16 @@ export default function Members() {
           register={register("password", { required: true })}
         />
         <Button color="blue" text="로그인" />
-        <button
-          className="w-full bg-indigo-500 hover:bg-indigo-600 text-white rounded-2xl shadow-md py-3"
+        <Button
+          color="indigo"
+          text="가입하기"
           onClick={() => router.push("/join")}
-        >
-          가입하기
-        </button>
-        <button
-          className="w-full bg-slate-500 hover:bg-slate-600 text-white rounded-2xl shadow-md py-3"
+        />
+        <Button
+          color="slate"
+          text="아이디 / 비밀번호 찾기"
           onClick={() => router.push("/info-search")}
-        >
-          아이디 / 비밀번호 찾기
-        </button>
+        />
       </form>
     </Layout>
   );

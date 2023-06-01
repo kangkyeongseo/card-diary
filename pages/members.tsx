@@ -1,3 +1,4 @@
+import Layout from "@/components/Layout";
 import Popup from "@/components/Popuo";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -10,47 +11,7 @@ export default function Members() {
   const [deleteMember, setDeleteMember] = useState(false);
   return (
     <>
-      <div className="w-full max-w-lg min-h-[500px] bg-slate-300 mt-16 mx-auto rounded-2xl shadow-2xl">
-        <div className="grid grid-cols-3 items-center bg-blue-500 text-white rounded-t-2xl px-6 py-4">
-          <div onClick={() => router.back()} className="cursor-pointer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-6 h-6 hover:text-slate-700"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
-              />
-            </svg>
-          </div>
-          <div className="justify-self-center">
-            <h3 className="text-lg font-bold">구성원</h3>
-          </div>
-          <div
-            className="justify-self-end cursor-pointer"
-            onClick={() => setAddMember(true)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-8 h-8 hover:text-slate-700"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4.5v15m7.5-7.5h-15"
-              />
-            </svg>
-          </div>
-        </div>
+      <Layout title="구성원" canGoBack={true} plusMember={setAddMember}>
         <ul className="flex flex-col gap-2 p-4 ">
           <li className="flex justify-between px-8 py-6 border border-slate-500 bg-slate-200 shadow-sm rounded-xl relative  ">
             <div>
@@ -113,7 +74,7 @@ export default function Members() {
             </div>
           </li>
         </ul>
-      </div>
+      </Layout>
       {/* 맴버 추가하기 */}
       {addMember ? <Popup setAddList={setAddMember} memberList={true} /> : null}
       {/* 맴버 이름 수정하기 */}
