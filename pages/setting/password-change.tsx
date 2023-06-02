@@ -1,8 +1,6 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Layout from "@/components/Layout";
-import { useRouter } from "next/router";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface PasswordChangeForm {

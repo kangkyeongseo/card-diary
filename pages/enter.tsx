@@ -3,6 +3,7 @@ import Input from "@/components/Input";
 import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
+import { json } from "stream/consumers";
 
 interface LoginForm {
   userId: string;
@@ -13,8 +14,13 @@ export default function Members() {
   const router = useRouter();
   const { register, handleSubmit } = useForm<LoginForm>();
   const onVaild = (data: LoginForm) => {
-    console.log(data);
-    router.push("/");
+    fetch("/api/users/enter", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   };
   return (
     <Layout title="로그인">

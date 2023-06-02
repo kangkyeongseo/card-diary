@@ -1,10 +1,7 @@
 import Layout from "@/components/Layout";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useState } from "react";
 
 export default function Setting() {
-  const router = useRouter();
   return (
     <Layout title="설정" canGoBack={true}>
       <ul className="flex flex-col justify-center items-center  gap-2 mt-8 text-gray-700">

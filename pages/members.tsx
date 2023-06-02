@@ -1,10 +1,8 @@
 import Layout from "@/components/Layout";
 import Popup from "@/components/Popuo";
-import { useRouter } from "next/router";
 import { useState } from "react";
 
 export default function Members() {
-  const router = useRouter();
   const [addMember, setAddMember] = useState(false);
   const [editMember, setEditMember] = useState(false);
   const [memberSetting, setMemberSetting] = useState(false);
