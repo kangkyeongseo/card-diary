@@ -1,6 +1,7 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Layout from "@/components/Layout";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 interface JoinForm {
@@ -12,9 +13,21 @@ interface JoinForm {
 }
 
 export default function Members() {
+  const router = useRouter();
   const { register, handleSubmit } = useForm<JoinForm>();
   const onValid = (data: JoinForm) => {
-    console.log(data);
+    fetch("/api/users/join", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        if (json.ok === true) {
+          router.push("/enter");
+        }
+      });
   };
   return (
     <Layout title="가입하기" canGoBack={true}>
