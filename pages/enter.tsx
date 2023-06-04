@@ -20,7 +20,13 @@ export default function Members() {
       headers: {
         "Content-Type": "application/json",
       },
-    });
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.ok === true) {
+          router.push("/");
+        }
+      });
   };
   return (
     <Layout title="로그인">

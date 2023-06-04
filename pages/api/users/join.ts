@@ -25,7 +25,6 @@ async function handler(
   } else {
     return res.status(400).json({ ok: false });
   }
-
   return res.status(200).json({ ok: true });
 }
 
