@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<{ ok: boolean }>
+  res: NextApiResponse<{ ok: boolean; error?: string }>
 ) {
   const {
     body: { userId, email, userName, password, confirmPassword },
@@ -12,8 +12,12 @@ async function handler(
   const idConfirm = await client.user.findUnique({ where: { userId } });
   const emailConfirm = await client.user.findUnique({ where: { email } });
 
-  if (idConfirm || emailConfirm) {
-    return res.status(409).json({ ok: false });
+  if (idConfirm) {
+    return res.status(409).json({ ok: false, error: "userId" });
+  }
+
+  if (emailConfirm) {
+    return res.status(409).json({ ok: false, error: "email" });
   }
 
   if (password === confirmPassword) {

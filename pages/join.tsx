@@ -14,7 +14,12 @@ interface JoinForm {
 
 export default function Members() {
   const router = useRouter();
-  const { register, handleSubmit } = useForm<JoinForm>();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<JoinForm>();
   const onValid = (data: JoinForm) => {
     fetch("/api/users/join", {
       method: "POST",
@@ -26,6 +31,20 @@ export default function Members() {
         console.log(json);
         if (json.ok === true) {
           router.push("/enter");
+        }
+        if (json.ok === false && json.error === "userId") {
+          setError(
+            "userId",
+            { message: "이미 사용중인 아이디 입니다." },
+            { shouldFocus: true }
+          );
+        }
+        if (json.ok === false && json.error === "email") {
+          setError(
+            "email",
+            { message: "이미 사용중인 이메일 입니다." },
+            { shouldFocus: true }
+          );
         }
       });
   };
@@ -61,6 +80,12 @@ export default function Members() {
           register={register("confirmPassword", { required: true })}
         />
         <Button text="가입하기" color="blue" />
+        <span className="text-center text-red-500">
+          {errors.userId?.message}
+        </span>
+        <span className="text-center text-red-500">
+          {errors.email?.message}
+        </span>
       </form>
     </Layout>
   );
