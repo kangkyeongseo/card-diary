@@ -12,7 +12,12 @@ interface LoginForm {
 
 export default function Members() {
   const router = useRouter();
-  const { register, handleSubmit } = useForm<LoginForm>();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<LoginForm>();
   const onVaild = (data: LoginForm) => {
     fetch("/api/users/enter", {
       method: "POST",
@@ -25,6 +30,20 @@ export default function Members() {
       .then((json) => {
         if (json.ok === true) {
           router.push("/");
+        }
+        if (json.ok === false && json.error === "userId") {
+          setError(
+            "userId",
+            { message: "존재하지 않는 아이디입니다." },
+            { shouldFocus: true }
+          );
+        }
+        if (json.ok === false && json.error === "password") {
+          setError(
+            "password",
+            { message: "비밀번호가 일치하지 않습니다." },
+            { shouldFocus: true }
+          );
         }
       });
   };
@@ -55,6 +74,12 @@ export default function Members() {
           text="아이디 / 비밀번호 찾기"
           onClick={() => router.push("/info-search")}
         />
+        <span className="text-center text-red-500">
+          {errors.userId?.message}
+        </span>
+        <span className="text-center text-red-500">
+          {errors.password?.message}
+        </span>
       </form>
     </Layout>
   );
