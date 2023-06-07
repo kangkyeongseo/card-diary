@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import client from "@/libs/sever/client";
 import withHandler from "@/libs/sever/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -22,7 +23,10 @@ async function handler(
 
   if (password === confirmPassword) {
     try {
-      await client.user.create({ data: { userId, email, userName, password } });
+      const hashPassword = await bcrypt.hash(password, 10);
+      await client.user.create({
+        data: { userId, email, userName, password: hashPassword },
+      });
     } catch (err) {
       return res.status(500).json({ ok: false });
     }

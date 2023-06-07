@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import client from "@/libs/sever/client";
 import withHandler from "@/libs/sever/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -11,9 +12,10 @@ async function handler(
   } = req;
   const user = await client.user.findUnique({ where: { userId } });
   if (!user) {
-    res.status(400).json({ ok: false, error: "userId" });
+    return res.status(400).json({ ok: false, error: "userId" });
   }
-  if (user?.password === password) {
+  const confirmPassword = await bcrypt.compare(password, user.password);
+  if (confirmPassword) {
     res.status(200).json({ ok: true });
   } else {
     res.status(400).json({ ok: false, error: "password" });
