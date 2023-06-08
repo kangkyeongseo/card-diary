@@ -17,3 +17,12 @@ model User {
   userName String
   password String
 }
+
+model Card {
+  id Int @id @default(autoincrement())
+  title String
+  content String
+  date String
+  importance Int
+  bgColor String
+}
