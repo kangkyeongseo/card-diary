@@ -1,7 +1,16 @@
 import bcrypt from "bcrypt";
 import client from "@/libs/sever/client";
 import withHandler from "@/libs/sever/withHandler";
+import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
+
+declare module "iron-session" {
+  interface IronSession {
+    user: {
+      id: number;
+    };
+  }
+}
 
 async function handler(
   req: NextApiRequest,
@@ -16,10 +25,19 @@ async function handler(
   }
   const confirmPassword = await bcrypt.compare(password, user.password);
   if (confirmPassword) {
+    req.session.user = { id: user.id };
+    await req.session.save();
     res.status(200).json({ ok: true });
   } else {
     res.status(400).json({ ok: false, error: "password" });
   }
 }
 
-export default withHandler({ method: "POST", handler });
+export default withIronSessionApiRoute(
+  withHandler({ method: "POST", handler }),
+  {
+    cookieName: "carddiarysession",
+    password:
+      "kjspioejh290ejvnw0498th1-di9ivnb21-390th2-9ei9vn2-39rthb21-390gnv-0102jrt94-9ghn2-=e90vn1-230",
+  }
+);
