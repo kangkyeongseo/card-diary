@@ -5,7 +5,7 @@ import Popup from "@/components/Popuo";
 import useDate from "@/libs/client/useDate";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const todos = [
   {
@@ -78,6 +78,11 @@ export default function Home() {
   const [period, setPeriod] = useState(0);
   const [importance, setImportance] = useState(1);
   const [bgColor, setBgColor] = useState("blue");
+  useEffect(() => {
+    fetch("/api/users/me")
+      .then((response) => response.json())
+      .then((json) => console.log(json));
+  }, []);
 
   const onTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
     const {
