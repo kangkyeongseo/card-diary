@@ -3,6 +3,7 @@ import Card from "@/components/Card";
 import EditCard from "@/components/EditCard";
 import Popup from "@/components/Popuo";
 import useDate from "@/libs/client/useDate";
+import useUser from "@/libs/client/useUser";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -78,12 +79,8 @@ export default function Home() {
   const [period, setPeriod] = useState(0);
   const [importance, setImportance] = useState(1);
   const [bgColor, setBgColor] = useState("blue");
-  useEffect(() => {
-    fetch("/api/users/me")
-      .then((response) => response.json())
-      .then((json) => console.log(json));
-  }, []);
-
+  const { user } = useUser();
+  console.log(user);
   const onTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
