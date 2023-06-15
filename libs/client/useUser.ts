@@ -11,7 +11,6 @@ export default function useUser() {
       .then((json) => setData(json));
   }, []);
   useEffect(() => {
-    console.log(data);
     if (data && !data.ok) {
       router.push("/enter");
     }
