@@ -9,6 +9,8 @@ async function handler(
   res: NextApiResponse<{ ok: boolean; user?: User }>
 ) {
   const { session } = req;
+  console.log(session);
+  if (!session.user) return res.status(403).json({ ok: false });
   const user = await client.user.findUnique({ where: { id: session.user.id } });
   if (!user) return res.status(403).json({ ok: false });
   return res.status(200).json({ ok: true, user });
