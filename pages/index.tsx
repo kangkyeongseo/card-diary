@@ -80,7 +80,6 @@ export default function Home() {
   const [importance, setImportance] = useState(1);
   const [bgColor, setBgColor] = useState("blue");
   const { user } = useUser();
-  console.log(user);
   const onTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
