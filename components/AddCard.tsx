@@ -35,17 +35,23 @@ export default function AddCard({
       title: "",
       content: "",
       date: new Date(),
-      star: 1,
+      importance: 1,
       bgColor: "blue",
     },
   });
-  const onPeriodChange = (date) => {
+  const onPeriodChange = (date: any) => {
     const today = new Date();
     const periodDate = Math.round((+date - +today) / 1000 / 3600 / 24);
     return periodDate;
   };
-  const onVaild = (data: any) => {
-    console.log(data);
+  const onVaild = async (data: any) => {
+    await fetch("/api/card", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   };
   return (
     <div className="fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10">
@@ -71,7 +77,7 @@ export default function AddCard({
                       <span
                         key={star}
                         className={
-                          +watch("star") >= star
+                          +watch("importance") >= star
                             ? "text-yellow-300"
                             : "text-white"
                         }
@@ -130,13 +136,15 @@ export default function AddCard({
                       <label
                         htmlFor="1"
                         className={
-                          +watch("star") >= 1 ? "text-yellow-300" : "text-white"
+                          +watch("importance") >= 1
+                            ? "text-yellow-300"
+                            : "text-white"
                         }
                       >
                         ★
                       </label>
                       <input
-                        {...register("star")}
+                        {...register("importance")}
                         type="radio"
                         id="1"
                         value={1}
@@ -147,13 +155,15 @@ export default function AddCard({
                       <label
                         htmlFor="2"
                         className={
-                          +watch("star") >= 2 ? "text-yellow-300" : "text-white"
+                          +watch("importance") >= 2
+                            ? "text-yellow-300"
+                            : "text-white"
                         }
                       >
                         ★
                       </label>
                       <input
-                        {...register("star")}
+                        {...register("importance")}
                         type="radio"
                         id="2"
                         value={2}
@@ -164,13 +174,15 @@ export default function AddCard({
                       <label
                         htmlFor="3"
                         className={
-                          +watch("star") >= 3 ? "text-yellow-300" : "text-white"
+                          +watch("importance") >= 3
+                            ? "text-yellow-300"
+                            : "text-white"
                         }
                       >
                         ★
                       </label>
                       <input
-                        {...register("star")}
+                        {...register("importance")}
                         type="radio"
                         id="3"
                         value={3}
@@ -181,13 +193,15 @@ export default function AddCard({
                       <label
                         htmlFor="4"
                         className={
-                          +watch("star") >= 4 ? "text-yellow-300" : "text-white"
+                          +watch("importance") >= 4
+                            ? "text-yellow-300"
+                            : "text-white"
                         }
                       >
                         ★
                       </label>
                       <input
-                        {...register("star")}
+                        {...register("importance")}
                         type="radio"
                         id="4"
                         value={4}
@@ -198,13 +212,15 @@ export default function AddCard({
                       <label
                         htmlFor="5"
                         className={
-                          +watch("star") >= 5 ? "text-yellow-300" : "text-white"
+                          +watch("importance") >= 5
+                            ? "text-yellow-300"
+                            : "text-white"
                         }
                       >
                         ★
                       </label>
                       <input
-                        {...register("star")}
+                        {...register("importance")}
                         type="radio"
                         id="5"
                         value={5}
