@@ -5,30 +5,38 @@ import withSession from "@/libs/sever/withSession";
 
 async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<{ ok: boolean }>
+  res: NextApiResponse<{ ok: boolean; [key: string]: any }>
 ) {
-  const {
-    session: { user },
-  } = req;
-  const {
-    body: { title, content, date, importance, bgColor },
-  } = req;
-  if (!user) return res.status(403).json({ ok: false });
-  await client.card.create({
-    data: {
-      title,
-      content,
-      date: new Date(date),
-      importance: +importance,
-      bgColor,
-      user: {
-        connect: {
-          id: user.id,
+  if (req.method === "POST") {
+    const {
+      session: { user },
+    } = req;
+    const {
+      body: { title, content, date, importance, bgColor },
+    } = req;
+    if (!user) return res.status(403).json({ ok: false });
+    await client.card.create({
+      data: {
+        title,
+        content,
+        date: new Date(date),
+        importance: +importance,
+        bgColor,
+        user: {
+          connect: {
+            id: user.id,
+          },
         },
       },
-    },
-  });
-  return res.status(200).json({ ok: true });
+    });
+    return res.status(200).json({ ok: true });
+  } else if (req.method === "GET") {
+    const {
+      session: { user },
+    } = req;
+    const cards = await client.card.findMany({ where: { userId: user.id } });
+    return res.status(200).json({ ok: true, cards });
+  }
 }
 
-export default withSession(withHandler({ method: "POST", handler }));
+export default withSession(withHandler({ method: ["GET", "POST"], handler }));

@@ -34,7 +34,7 @@ async function handler(
 }
 
 export default withIronSessionApiRoute(
-  withHandler({ method: "POST", handler }),
+  withHandler({ method: ["POST"], handler }),
   {
     cookieName: "carddiarysession",
     password:

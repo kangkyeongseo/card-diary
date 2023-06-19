@@ -80,6 +80,17 @@ export default function Home() {
   const [importance, setImportance] = useState(1);
   const [bgColor, setBgColor] = useState("blue");
   const { user } = useUser();
+
+  const getCards = async () => {
+    await fetch("/api/card")
+      .then((response) => response.json())
+      .then((json) => console.log(json));
+  };
+
+  useEffect(() => {
+    getCards();
+  }, []);
+
   const onTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
