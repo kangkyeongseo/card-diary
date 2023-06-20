@@ -18,10 +18,10 @@ model User {
   email String @unique
   userName String
   password String
-  cards Card[]
+  todos Todo[]
 }
 
-model Card {
+model Todo {
   id Int @id @default(autoincrement())
   title String
   content String

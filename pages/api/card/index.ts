@@ -15,7 +15,7 @@ async function handler(
       body: { title, content, date, importance, bgColor },
     } = req;
     if (!user) return res.status(403).json({ ok: false });
-    await client.card.create({
+    await client.todo.create({
       data: {
         title,
         content,
@@ -34,8 +34,8 @@ async function handler(
     const {
       session: { user },
     } = req;
-    const cards = await client.card.findMany({ where: { userId: user.id } });
-    return res.status(200).json({ ok: true, cards });
+    const todos = await client.todo.findMany({ where: { userId: user.id } });
+    return res.status(200).json({ ok: true, todos });
   }
 }
 
