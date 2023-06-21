@@ -51,6 +51,9 @@ export default function Home() {
   const onEditCard = () => {
     setEditCard((pre) => !pre);
   };
+  const onToggle = () => {
+    setAddCard((pre) => !pre);
+  };
   return (
     <div>
       <div className="grid grid-cols-[300px_1fr] ">
@@ -250,20 +253,7 @@ export default function Home() {
         </div>
       </div>
       {/* 카드 추가하기 */}
-      {addCard ? (
-        <AddCard
-          title={title}
-          contents={todo}
-          date={date}
-          bgColor={bgColor}
-          onTitleChange={onTitleChange}
-          onToDoChange={onToDoChange}
-          onDateChange={onDateChange}
-          setBgColor={setBgColor}
-          onAddCard={onAddCard}
-          kind="memo"
-        />
-      ) : null}
+      {addCard ? <AddCard kind="memo" onToggle={onToggle} /> : null}
       {/* 카드 수정하기 */}
       {editCard ? (
         <EditCard
