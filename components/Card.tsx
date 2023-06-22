@@ -1,7 +1,7 @@
 import useDate from "@/libs/client/useDate";
 
 interface CardProp {
-  id: string;
+  id: number;
   title: string;
   contents: string;
   date: Date;
@@ -34,7 +34,9 @@ export default function Card({
       {kind === "todo" ? (
         <>
           <div className="flex justify-between items-center ">
-            <span className="text-xs text-white">{useDate(date)}</span>
+            <span className="text-xs text-white">
+              {useDate(new Date(date))}
+            </span>
             <div className="text-xs">
               {[1, 2, 3, 4, 5].map((star) => (
                 <span
@@ -98,7 +100,9 @@ export default function Card({
       {kind === "diary" ? (
         <>
           <div className="flex justify-center items-center ">
-            <span className="text-xs text-white">{useDate(date)}</span>
+            <span className="text-xs text-white">
+              {useDate(new Date(date))}
+            </span>
           </div>
           <div className="text-center text-lg font-bold text-white mt-4 break-words">
             {title.length === 0 ? "무슨 일이 있었나요?" : title}
@@ -147,7 +151,9 @@ export default function Card({
       {kind === "memo" ? (
         <>
           <div className="flex justify-center items-center ">
-            <span className="text-xs text-white">{useDate(date)}</span>
+            <span className="text-xs text-white">
+              {useDate(new Date(date))}
+            </span>
           </div>
           <div className="text-center text-lg font-bold text-white mt-4 break-words">
             {title.length === 0 ? "무슨 일이 있었나요?" : title}

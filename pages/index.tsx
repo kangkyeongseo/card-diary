@@ -4,6 +4,7 @@ import EditCard from "@/components/EditCard";
 import Popup from "@/components/Popuo";
 import useDate from "@/libs/client/useDate";
 import useUser from "@/libs/client/useUser";
+import { Todo } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -74,24 +75,26 @@ export default function Home() {
   const [editList, setEditList] = useState(false);
   const [memberList, setMemberlist] = useState(false);
   const [title, setTitle] = useState("");
-  const [todo, setTodo] = useState("");
+  /*   const [todo, setTodo] = useState(""); */
   const [date, setDate] = useState(useDate(new Date()));
   const [period, setPeriod] = useState(0);
   const [importance, setImportance] = useState(1);
   const [bgColor, setBgColor] = useState("blue");
   const { user } = useUser();
 
+  const [newTodos, setNewTodos] = useState<Todo[]>();
+
   const getCards = async () => {
     await fetch("/api/card")
       .then((response) => response.json())
-      .then((json) => console.log(json));
+      .then((json) => setNewTodos(json.todos));
   };
 
   useEffect(() => {
     getCards();
   }, []);
 
-  const onTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
+  /*   const onTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
     } = event;
@@ -111,7 +114,7 @@ export default function Home() {
     const lastDay = new Date(value);
     const periodDate = Math.round((+lastDay - +today) / 1000 / 3600 / 24);
     setPeriod(periodDate);
-  };
+  }; */
   const onAddCard = () => {
     setAddCard((pre) => !pre);
   };
@@ -299,14 +302,14 @@ export default function Home() {
             </li>
           </ul>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(14rem,max-content))] justify-center gap-8">
-            {todos.map((todo) => (
+            {newTodos?.map((todo) => (
               <Card
                 key={todo.id}
                 id={todo.id}
                 title={todo.title}
-                contents={todo.todo}
+                contents={todo.content}
                 date={todo.date}
-                period={todo.period}
+                period={1}
                 importance={todo.importance}
                 bgColor={todo.bgColor}
                 onEditCard={onEditCard}
@@ -339,7 +342,7 @@ export default function Home() {
       {/* 카드 추가하기 */}
       {addCard ? <AddCard onToggle={onToggle} /> : null}
       {/* 카드 수정하기 */}
-      {editCard ? (
+      {/*       {editCard ? (
         <EditCard
           title={title}
           contents={todo}
@@ -354,7 +357,7 @@ export default function Home() {
           setBgColor={setBgColor}
           onEditCard={onEditCard}
         />
-      ) : null}
+      ) : null} */}
       {/* 리스트 추가하기 */}
       {addList ? <Popup setAddList={setAddList} /> : null}
       {/* 리스트 이름 수정하기 */}
