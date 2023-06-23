@@ -354,19 +354,7 @@ export default function Home() {
       {/* 카드 추가하기 */}
       {addCard ? <AddCard kind="diary" onToggle={onToggle} /> : null}
       {/* 카드 수정하기 */}
-      {editCard ? (
-        <EditCard
-          title={title}
-          contents={todo}
-          date={date}
-          bgColor={bgColor}
-          onTitleChange={onTitleChange}
-          onContentsChange={onToDoChange}
-          setBgColor={setBgColor}
-          onEditCard={onEditCard}
-          kind="diary"
-        />
-      ) : null}
+      {editCard ? <EditCard kind="diary" onEditCard={onEditCard} /> : null}
       {/* 리스트 추가하기 */}
       {addList ? <Popup setAddList={setAddList} /> : null}
       {/* 리스트 이름 수정하기 */}

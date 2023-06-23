@@ -94,7 +94,7 @@ export default function Home() {
     getCards();
   }, []);
 
-  /*   const onTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
+  const onTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
     } = event;
@@ -114,7 +114,7 @@ export default function Home() {
     const lastDay = new Date(value);
     const periodDate = Math.round((+lastDay - +today) / 1000 / 3600 / 24);
     setPeriod(periodDate);
-  }; */
+  };
   const onAddCard = () => {
     setAddCard((pre) => !pre);
   };
@@ -342,22 +342,7 @@ export default function Home() {
       {/* 카드 추가하기 */}
       {addCard ? <AddCard onToggle={onToggle} /> : null}
       {/* 카드 수정하기 */}
-      {/*       {editCard ? (
-        <EditCard
-          title={title}
-          contents={todo}
-          date={date}
-          period={period}
-          importance={importance}
-          bgColor={bgColor}
-          onTitleChange={onTitleChange}
-          onContentsChange={onToDoChange}
-          onPeriodChange={onPeriodChange}
-          setImportance={setImportance}
-          setBgColor={setBgColor}
-          onEditCard={onEditCard}
-        />
-      ) : null} */}
+      {editCard ? <EditCard onEditCard={onEditCard} /> : null}
       {/* 리스트 추가하기 */}
       {addList ? <Popup setAddList={setAddList} /> : null}
       {/* 리스트 이름 수정하기 */}
