@@ -19,6 +19,7 @@ model User {
   userName String
   password String
   todos Todo[]
+  diarts Diary[]
 }
 
 model Todo {
@@ -27,6 +28,18 @@ model Todo {
   content String
   date DateTime
   importance Int
+  bgColor String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+}
+
+model Diary {
+  id Int @id @default(autoincrement())
+  title String
+  content String
+  date DateTime
   bgColor String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
