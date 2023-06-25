@@ -22,7 +22,16 @@ export default function AddCard({ kind = "todo", onToggle }: AddCardProp) {
     return periodDate;
   };
   const onTodoVaild = async (data: any) => {
-    await fetch("/api/card", {
+    await fetch("/api/todo", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
+  const onDiaryVaild = async (data: any) => {
+    await fetch("/api/diary", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -354,7 +363,10 @@ export default function AddCard({ kind = "todo", onToggle }: AddCardProp) {
               </div>
             </div>
             <div>
-              <form className="flex flex-col gap-2">
+              <form
+                className="flex flex-col gap-2"
+                onSubmit={handleSubmit(onDiaryVaild)}
+              >
                 <div className="flex flex-col gap-2">
                   <label className="text-white">제목</label>
                   <input
@@ -489,7 +501,10 @@ export default function AddCard({ kind = "todo", onToggle }: AddCardProp) {
             >
               취소하기
             </button>
-            <button className="w-72 p-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600">
+            <button
+              className="w-72 p-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600"
+              onClick={handleSubmit(onDiaryVaild)}
+            >
               생성하기
             </button>
           </div>

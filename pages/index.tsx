@@ -85,7 +85,7 @@ export default function Home() {
   const [newTodos, setNewTodos] = useState<Todo[]>();
 
   const getCards = async () => {
-    await fetch("/api/card")
+    await fetch("/api/todo")
       .then((response) => response.json())
       .then((json) => setNewTodos(json.todos));
   };
