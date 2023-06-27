@@ -2,20 +2,12 @@ import AddCard from "@/components/AddCard";
 import Card from "@/components/Card";
 import EditCard from "@/components/EditCard";
 import Popup from "@/components/Popuo";
-import useDate from "@/libs/client/useDate";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Diary } from "@prisma/client";
+import useUser from "@/libs/client/useUser";
 
-const diarys = [
-  {
-    id: "1",
-    title: "게임을 샀다",
-    diary: "왕눈을 샀다.",
-    date: new Date(),
-    bgColor: "red",
-  },
-];
 export default function Home() {
   const router = useRouter();
   const [addCard, setAddCard] = useState(false);
@@ -24,29 +16,10 @@ export default function Home() {
   const [editList, setEditList] = useState(false);
   const [deleteList, setDeleteList] = useState(false);
   const [addChildList, setAddChildList] = useState(false);
-  const [title, setTitle] = useState("");
-  const [todo, setTodo] = useState("");
-  const [date, setDate] = useState(useDate(new Date()));
-  const [bgColor, setBgColor] = useState("blue");
   const [show, setShow] = useState(false);
-  const onTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setTitle(value);
-  };
-  const onToDoChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setTodo(value);
-  };
-  const onDateChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setDate(useDate(new Date(value)));
-  };
+  const [diarys, setDiarys] = useState<Diary[]>();
+  const { user } = useUser();
+
   const onAddCard = () => {
     setAddCard((pre) => !pre);
   };
@@ -56,6 +29,13 @@ export default function Home() {
   const onToggle = () => {
     setAddCard((pre) => !pre);
   };
+  const getDiary = async () => {
+    const data = await (await fetch("/api/diary")).json();
+    setDiarys(data.diarys);
+  };
+  useEffect(() => {
+    getDiary();
+  }, []);
   return (
     <div>
       <div className="grid grid-cols-[300px_1fr] ">
@@ -315,18 +295,20 @@ export default function Home() {
             </li>
           </ul>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(14rem,max-content))] justify-center items-center gap-8 ">
-            {diarys.map((diary) => (
-              <Card
-                key={diary.id}
-                id={diary.id}
-                title={diary.title}
-                contents={diary.diary}
-                date={diary.date}
-                bgColor={diary.bgColor}
-                onEditCard={onEditCard}
-                kind="diary"
-              />
-            ))}
+            {diarys
+              ? diarys.map((diary) => (
+                  <Card
+                    key={diary.id}
+                    id={diary.id}
+                    title={diary.title}
+                    contents={diary.diary}
+                    date={diary.date}
+                    bgColor={diary.bgColor}
+                    onEditCard={onEditCard}
+                    kind="diary"
+                  />
+                ))
+              : null}
             <div
               className="flex justify-center items-center w-full max-w-[14rem] h-80 rounded-xl border border-dashed text-white hover:scale-105"
               onClick={onAddCard}

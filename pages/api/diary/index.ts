@@ -2,6 +2,7 @@ import withHandler from "@/libs/sever/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
 import client from "@/libs/sever/client";
 import withSession from "@/libs/sever/withSession";
+import { use } from "react";
 
 async function handler(
   req: NextApiRequest,
@@ -10,24 +11,30 @@ async function handler(
   const {
     session: { user },
   } = req;
-  const {
-    body: { title, content, date, bgColor },
-  } = req;
   if (!user) return res.status(403).json({ ok: false });
-  await client.diary.create({
-    data: {
-      title,
-      content,
-      date: new Date(date),
-      bgColor,
-      user: {
-        connect: {
-          id: user.id,
+  if (req.method === "POST") {
+    const {
+      body: { title, content, date, bgColor },
+    } = req;
+    await client.diary.create({
+      data: {
+        title,
+        content,
+        date: new Date(date),
+        bgColor,
+        user: {
+          connect: {
+            id: user.id,
+          },
         },
       },
-    },
-  });
-  return res.status(200).json({ ok: true });
+    });
+    return res.status(200).json({ ok: true });
+  } else if (req.method === "GET") {
+    const diarys = await client.diary.findMany({ where: { userId: user.id } });
+    console.log(diarys);
+    return res.status(200).json({ ok: true, diarys });
+  }
 }
 
-export default withSession(withHandler({ method: ["POST"], handler }));
+export default withSession(withHandler({ method: ["GET", "POST"], handler }));

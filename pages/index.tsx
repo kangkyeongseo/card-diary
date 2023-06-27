@@ -2,69 +2,11 @@ import AddCard from "@/components/AddCard";
 import Card from "@/components/Card";
 import EditCard from "@/components/EditCard";
 import Popup from "@/components/Popuo";
-import useDate from "@/libs/client/useDate";
 import useUser from "@/libs/client/useUser";
 import { Todo } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-
-const todos = [
-  {
-    id: "1",
-    title: "점심 먹기",
-    todo: "옥수수 스프 먹기",
-    date: new Date(),
-    period: 0,
-    importance: 3,
-    bgColor: "blue",
-  },
-  {
-    id: "2",
-    title: "점심 먹기",
-    todo: "옥수수 스프 먹기",
-    date: new Date(),
-    period: 0,
-    importance: 3,
-    bgColor: "red",
-  },
-  {
-    id: "3",
-    title: "점심 먹기",
-    todo: "옥수수 스프 먹기",
-    date: new Date(),
-    period: 0,
-    importance: 3,
-    bgColor: "slate",
-  },
-  {
-    id: "4",
-    title: "점심 먹기",
-    todo: "옥수수 스프 먹기",
-    date: new Date(),
-    period: 0,
-    importance: 3,
-    bgColor: "green",
-  },
-  {
-    id: "5",
-    title: "점심 먹기",
-    todo: "옥수수 스프 먹기",
-    date: new Date(),
-    period: 0,
-    importance: 3,
-    bgColor: "yellow",
-  },
-  {
-    id: "6",
-    title: "점심 먹기",
-    todo: "옥수수 스프 먹기",
-    date: new Date(),
-    period: 0,
-    importance: 3,
-    bgColor: "yellow",
-  },
-];
 
 export default function Home() {
   const router = useRouter();
@@ -74,12 +16,6 @@ export default function Home() {
   const [deleteList, setDeleteList] = useState(false);
   const [editList, setEditList] = useState(false);
   const [memberList, setMemberlist] = useState(false);
-  const [title, setTitle] = useState("");
-  /*   const [todo, setTodo] = useState(""); */
-  const [date, setDate] = useState(useDate(new Date()));
-  const [period, setPeriod] = useState(0);
-  const [importance, setImportance] = useState(1);
-  const [bgColor, setBgColor] = useState("blue");
   const { user } = useUser();
 
   const [newTodos, setNewTodos] = useState<Todo[]>();
@@ -94,27 +30,6 @@ export default function Home() {
     getCards();
   }, []);
 
-  const onTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setTitle(value);
-  };
-  const onToDoChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setTodo(value);
-  };
-  const onPeriodChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    const today = new Date();
-    const lastDay = new Date(value);
-    const periodDate = Math.round((+lastDay - +today) / 1000 / 3600 / 24);
-    setPeriod(periodDate);
-  };
   const onAddCard = () => {
     setAddCard((pre) => !pre);
   };
