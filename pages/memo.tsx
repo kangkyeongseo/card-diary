@@ -23,28 +23,7 @@ export default function Home() {
   const [addList, setAddList] = useState(false);
   const [editList, setEditList] = useState(false);
   const [deleteList, setDeleteList] = useState(false);
-  const [title, setTitle] = useState("");
-  const [todo, setTodo] = useState("");
-  const [date, setDate] = useState(useDate(new Date()));
-  const [bgColor, setBgColor] = useState("blue");
-  const onTitleChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setTitle(value);
-  };
-  const onToDoChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setTodo(value);
-  };
-  const onDateChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setDate(useDate(new Date(value)));
-  };
+
   const onAddCard = () => {
     setAddCard((pre) => !pre);
   };
