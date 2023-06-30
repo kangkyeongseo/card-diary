@@ -232,7 +232,7 @@ export default function Home() {
             ))}
             <div
               className="flex justify-center items-center w-full max-w-[14rem] h-80 rounded-xl border border-dashed text-white hover:scale-105"
-              onClick={onAddCard}
+              onClick={() => router.push("/todo/add-card")}
             >
               <div>
                 <svg
