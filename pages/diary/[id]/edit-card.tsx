@@ -1,7 +1,21 @@
 import useDate from "@/libs/client/useDate";
+import { Diary } from "@prisma/client";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function EditCard() {
+  const router = useRouter();
+  const [diary, setDiary] = useState<Diary>();
+  console.log(diary);
+  const getDiary = async () => {
+    const id = router.query.id;
+    const data = await (await fetch(`/api/diary/${id}`)).json();
+    setDiary(data);
+  };
+  useEffect(() => {
+    if (router.query.id) getDiary();
+  }, [router]);
   const { register, handleSubmit, watch } = useForm({
     defaultValues: {
       title: "",
