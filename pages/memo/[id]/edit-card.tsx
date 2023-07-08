@@ -1,7 +1,21 @@
 import useDate from "@/libs/client/useDate";
+import { Memo } from "@prisma/client";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function EditCard() {
+  const router = useRouter();
+  const [memo, setMemo] = useState<Memo>();
+  console.log(memo);
+  const getMemo = async () => {
+    const id = router.query.id;
+    const data = await (await fetch(`/api/memo/${id}`)).json();
+    setMemo(data);
+  };
+  useEffect(() => {
+    if (router.query.id) getMemo();
+  }, [router]);
   const { register, handleSubmit, watch } = useForm({
     defaultValues: {
       title: "",
