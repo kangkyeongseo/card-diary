@@ -3,14 +3,7 @@ import client from "@/libs/sever/client";
 import withHandler from "@/libs/sever/withHandler";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
-
-declare module "iron-session" {
-  interface IronSessionData {
-    user: {
-      id: number;
-    };
-  }
-}
+import withSession from "@/libs/sever/withSession";
 
 async function handler(
   req: NextApiRequest,
@@ -33,11 +26,6 @@ async function handler(
   }
 }
 
-export default withIronSessionApiRoute(
-  withHandler({ method: ["POST"], handler }),
-  {
-    cookieName: "carddiarysession",
-    password:
-      "kjspioejh290ejvnw0498th1-di9ivnb21-390th2-9ei9vn2-39rthb21-390gnv-0102jrt94-9ghn2-=e90vn1-230",
-  }
+export default withSession(
+  withHandler({ method: ["POST"], handler, isPrivate: false })
 );

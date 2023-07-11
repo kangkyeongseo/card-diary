@@ -218,9 +218,8 @@ export default function Home() {
           </ul>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(14rem,max-content))] justify-center gap-8">
             {newTodos?.map((todo) => (
-              <Link href={`/todo/${todo.id}`}>
+              <Link href={`/todo/${todo.id}`} key={todo.id}>
                 <Card
-                  key={todo.id}
                   id={todo.id}
                   title={todo.title}
                   contents={todo.content}

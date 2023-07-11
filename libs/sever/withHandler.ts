@@ -5,12 +5,24 @@ type method = "GET" | "POST";
 interface ConfigProp {
   method: method[];
   handler: (req: NextApiRequest, res: NextApiResponse) => void;
+  isPrivate?: Boolean;
 }
 
-export default function withHandler({ method, handler }: ConfigProp) {
+export default function withHandler({
+  method,
+  handler,
+  isPrivate = true,
+}: ConfigProp) {
   return async function (req: NextApiRequest, res: NextApiResponse) {
+    const {
+      session: { user },
+    } = req;
+    console.log(user);
     if (req.method && !method.includes(req.method as any)) {
       return res.status(405).end();
+    }
+    if (isPrivate && !user) {
+      return res.status(401).json({ ok: false });
     }
     try {
       await handler(req, res);

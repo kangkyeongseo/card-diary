@@ -15,4 +15,6 @@ async function handler(
   return res.status(200).json({ ok: true, user });
 }
 
-export default withSession(withHandler({ method: ["GET"], handler }));
+export default withSession(
+  withHandler({ method: ["GET"], handler, isPrivate: false })
+);

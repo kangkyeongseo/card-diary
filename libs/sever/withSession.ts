@@ -1,5 +1,13 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 
+declare module "iron-session" {
+  interface IronSessionData {
+    user: {
+      id: number;
+    };
+  }
+}
+
 export default function withSession(handler: any) {
   const config = {
     cookieName: "carddiarysession",
