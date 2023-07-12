@@ -7,6 +7,7 @@ import { Todo } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import useSWR from "swr";
 
 export default function Home() {
   const router = useRouter();
@@ -18,17 +19,19 @@ export default function Home() {
   const [memberList, setMemberlist] = useState(false);
   const { user } = useUser();
 
-  const [newTodos, setNewTodos] = useState<Todo[]>();
+  // const [newTodos, setNewTodos] = useState<Todo[]>();
 
-  const getCards = async () => {
-    await fetch("/api/todo")
-      .then((response) => response.json())
-      .then((json) => setNewTodos(json.todos));
-  };
+  // const getCards = async () => {
+  //   await fetch("/api/todo")
+  //     .then((response) => response.json())
+  //     .then((json) => setNewTodos(json.todos));
+  // };
 
-  useEffect(() => {
-    getCards();
-  }, []);
+  // useEffect(() => {
+  //   getCards();
+  // }, []);
+
+  const { data, error } = useSWR("/api/todo");
 
   const onAddCard = () => {
     setAddCard((pre) => !pre);
@@ -217,7 +220,7 @@ export default function Home() {
             </li>
           </ul>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(14rem,max-content))] justify-center gap-8">
-            {newTodos?.map((todo) => (
+            {data?.todos?.map((todo) => (
               <Link href={`/todo/${todo.id}`} key={todo.id}>
                 <Card
                   id={todo.id}
