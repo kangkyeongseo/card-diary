@@ -9,39 +9,21 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 
+interface ITodoResponse {
+  ok: boolean;
+  todos: Todo[];
+}
+
 export default function Home() {
   const router = useRouter();
-  const [addCard, setAddCard] = useState(false);
-  const [editCard, setEditCard] = useState(false);
   const [addList, setAddList] = useState(false);
   const [deleteList, setDeleteList] = useState(false);
   const [editList, setEditList] = useState(false);
   const [memberList, setMemberlist] = useState(false);
   const { user } = useUser();
 
-  // const [newTodos, setNewTodos] = useState<Todo[]>();
+  const { data, error } = useSWR<ITodoResponse>("/api/todo");
 
-  // const getCards = async () => {
-  //   await fetch("/api/todo")
-  //     .then((response) => response.json())
-  //     .then((json) => setNewTodos(json.todos));
-  // };
-
-  // useEffect(() => {
-  //   getCards();
-  // }, []);
-
-  const { data, error } = useSWR("/api/todo");
-
-  const onAddCard = () => {
-    setAddCard((pre) => !pre);
-  };
-  const onEditCard = () => {
-    setEditCard((pre) => !pre);
-  };
-  const onToggle = () => {
-    setAddCard((pre) => !pre);
-  };
   return (
     <div>
       <div className="grid grid-cols-[300px_1fr] ">
@@ -165,22 +147,24 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                  <div onClick={onAddCard}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-6 h-6 hover:text-slate-900"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
-                      />
-                    </svg>
-                  </div>
+                  <Link href="/todo/add-card">
+                    <div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6 hover:text-slate-900"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 4.5v15m7.5-7.5h-15"
+                        />
+                      </svg>
+                    </div>
+                  </Link>
                 </div>
               </li>
             </ul>
@@ -230,7 +214,6 @@ export default function Home() {
                   period={1}
                   importance={todo.importance}
                   bgColor={todo.bgColor}
-                  onEditCard={onEditCard}
                 />
               </Link>
             ))}
@@ -258,10 +241,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* 카드 추가하기 */}
-      {addCard ? <AddCard onToggle={onToggle} /> : null}
-      {/* 카드 수정하기 */}
-      {editCard ? <EditCard onEditCard={onEditCard} /> : null}
       {/* 리스트 추가하기 */}
       {addList ? <Popup setAddList={setAddList} /> : null}
       {/* 리스트 이름 수정하기 */}
