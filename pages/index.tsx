@@ -1,13 +1,11 @@
-import AddCard from "@/components/AddCard";
-import Card from "@/components/Card";
-import EditCard from "@/components/EditCard";
-import Popup from "@/components/Popuo";
-import useUser from "@/libs/client/useUser";
-import { Todo } from "@prisma/client";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { Todo } from "@prisma/client";
 import useSWR from "swr";
+import useUser from "@/libs/client/useUser";
+import Card from "@/components/Card";
+import Popup from "@/components/Popuo";
 
 interface ITodoResponse {
   ok: boolean;

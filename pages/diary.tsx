@@ -1,41 +1,28 @@
-import AddCard from "@/components/AddCard";
-import Card from "@/components/Card";
-import EditCard from "@/components/EditCard";
-import Popup from "@/components/Popuo";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 import { Diary } from "@prisma/client";
+import useSWR from "swr";
 import useUser from "@/libs/client/useUser";
+import Card from "@/components/Card";
+import Popup from "@/components/Popuo";
+
+interface IDiaryResponse {
+  ok: boolean;
+  diarys: Diary[];
+}
 
 export default function Home() {
   const router = useRouter();
-  const [addCard, setAddCard] = useState(false);
-  const [editCard, setEditCard] = useState(false);
   const [addList, setAddList] = useState(false);
   const [editList, setEditList] = useState(false);
   const [deleteList, setDeleteList] = useState(false);
   const [addChildList, setAddChildList] = useState(false);
   const [show, setShow] = useState(false);
-  const [diarys, setDiarys] = useState<Diary[]>();
   const { user } = useUser();
 
-  const onAddCard = () => {
-    setAddCard((pre) => !pre);
-  };
-  const onEditCard = () => {
-    setEditCard((pre) => !pre);
-  };
-  const onToggle = () => {
-    setAddCard((pre) => !pre);
-  };
-  const getDiary = async () => {
-    const data = await (await fetch("/api/diary")).json();
-    setDiarys(data.diarys);
-  };
-  useEffect(() => {
-    getDiary();
-  }, []);
+  const { data, error } = useSWR<IDiaryResponse>("/api/diary");
+
   return (
     <div>
       <div className="grid grid-cols-[300px_1fr] ">
@@ -222,23 +209,25 @@ export default function Home() {
                           />
                         </svg>
                       </div>
-                      <div onClick={onAddCard}>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          className="w-6 h-6 hover:text-slate-900"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 4.5v15m7.5-7.5h-15"
-                          />
-                        </svg>
-                      </div>
-                      <div onClick={() => setDeleteList(true)}>
+                      <Link href={"/diary/add-card"}>
+                        <div>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth="1.5"
+                            stroke="currentColor"
+                            className="w-6 h-6 hover:text-slate-900"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M12 4.5v15m7.5-7.5h-15"
+                            />
+                          </svg>
+                        </div>
+                      </Link>
+                      <div>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -295,24 +284,18 @@ export default function Home() {
             </li>
           </ul>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(14rem,max-content))] justify-center items-center gap-8 ">
-            {diarys
-              ? diarys.map((diary) => (
-                  <Card
-                    key={diary.id}
-                    id={diary.id}
-                    title={diary.title}
-                    contents={diary.diary}
-                    date={diary.date}
-                    bgColor={diary.bgColor}
-                    onEditCard={onEditCard}
-                    kind="diary"
-                  />
-                ))
-              : null}
-            <div
-              className="flex justify-center items-center w-full max-w-[14rem] h-80 rounded-xl border border-dashed text-white hover:scale-105"
-              onClick={onAddCard}
-            >
+            {data?.diarys.map((diary) => (
+              <Card
+                key={diary.id}
+                id={diary.id}
+                title={diary.title}
+                contents={diary.content}
+                date={diary.date}
+                bgColor={diary.bgColor}
+                kind="diary"
+              />
+            ))}
+            <div className="flex justify-center items-center w-full max-w-[14rem] h-80 rounded-xl border border-dashed text-white hover:scale-105">
               <div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -333,10 +316,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* 카드 추가하기 */}
-      {addCard ? <AddCard kind="diary" onToggle={onToggle} /> : null}
-      {/* 카드 수정하기 */}
-      {editCard ? <EditCard kind="diary" onEditCard={onEditCard} /> : null}
       {/* 리스트 추가하기 */}
       {addList ? <Popup setAddList={setAddList} /> : null}
       {/* 리스트 이름 수정하기 */}
