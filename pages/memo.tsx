@@ -1,38 +1,24 @@
-import AddCard from "@/components/AddCard";
-import Card from "@/components/Card";
-import EditCard from "@/components/EditCard";
-import Popup from "@/components/Popuo";
-import useDate from "@/libs/client/useDate";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { Memo } from "@prisma/client";
+import useSWR from "swr";
+import Card from "@/components/Card";
+import Popup from "@/components/Popuo";
 
-const memos = [
-  {
-    id: "1",
-    title: "술픽업 가져오기",
-    memo: "백석 보돌미역에서 커틱삭 픽업",
-    date: new Date(),
-    bgColor: "yellow",
-  },
-];
+interface IMemoResponse {
+  ok: boolean;
+  memos: Memo[];
+}
+
 export default function Home() {
   const router = useRouter();
-  const [addCard, setAddCard] = useState(false);
-  const [editCard, setEditCard] = useState(false);
   const [addList, setAddList] = useState(false);
   const [editList, setEditList] = useState(false);
   const [deleteList, setDeleteList] = useState(false);
 
-  const onAddCard = () => {
-    setAddCard((pre) => !pre);
-  };
-  const onEditCard = () => {
-    setEditCard((pre) => !pre);
-  };
-  const onToggle = () => {
-    setAddCard((pre) => !pre);
-  };
+  const { data, error } = useSWR<IMemoResponse>("/api/memo");
+
   return (
     <div>
       <div className="grid grid-cols-[300px_1fr] ">
@@ -140,7 +126,7 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                  <div onClick={onAddCard}>
+                  <div>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -195,22 +181,18 @@ export default function Home() {
             </li>
           </ul>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(14rem,max-content))] justify-center items-center gap-8 ">
-            {memos.map((memo) => (
+            {data?.memos.map((memo) => (
               <Card
                 key={memo.id}
                 id={memo.id}
                 title={memo.title}
-                contents={memo.memo}
+                contents={memo.content}
                 date={memo.date}
                 bgColor={memo.bgColor}
-                onEditCard={onEditCard}
                 kind="memo"
               />
             ))}
-            <div
-              className="flex justify-center items-center w-full max-w-[14rem] h-80 rounded-xl border border-dashed text-white hover:scale-105"
-              onClick={onAddCard}
-            >
+            <div className="flex justify-center items-center w-full max-w-[14rem] h-80 rounded-xl border border-dashed text-white hover:scale-105">
               <div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -231,10 +213,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* 카드 추가하기 */}
-      {addCard ? <AddCard kind="memo" onToggle={onToggle} /> : null}
-      {/* 카드 수정하기 */}
-      {editCard ? <EditCard kind="memo" onEditCard={onEditCard} /> : null}
       {/* 리스트 추가하기 */}
       {addList ? <Popup setAddList={setAddList} /> : null}
       {/* 리스트 이름 수정하기 */}
