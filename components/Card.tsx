@@ -1,5 +1,5 @@
 import useDate from "@/libs/client/useDate";
-import Link from "next/link";
+import { useRouter } from "next/router";
 
 interface CardProp {
   id: number;
@@ -22,6 +22,7 @@ export default function Card({
   bgColor,
   kind = "todo",
 }: CardProp) {
+  const router = useRouter();
   return (
     <div
       key={id}
@@ -60,7 +61,7 @@ export default function Card({
           </div>
           <div className="absolute top-0 left-0 rounded-xl w-full h-full bg-[rgba(0,0,0,0.5)] hidden text-white group-hover/card:flex items-end justify-center">
             <div className="flex items-center gap-8 mb-12">
-              <Link href={`/todo/${id}/edit-card`}>
+              <div onClick={() => router.push(`/todo/${id}/edit-card`)}>
                 <svg
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +76,7 @@ export default function Card({
                     d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
                   />
                 </svg>
-              </Link>
+              </div>
               <div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

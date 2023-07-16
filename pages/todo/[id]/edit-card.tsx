@@ -1,44 +1,54 @@
-import useDate from "@/libs/client/useDate";
 import { Todo } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import useSWR from "swr";
+import useDate from "@/libs/client/useDate";
+
+interface ITodoEditResponse {
+  ok: boolean;
+  todo: Todo;
+}
+
+interface IEditTodoForm {
+  title: string;
+  content: string;
+  date: Date;
+  importance: number;
+  bgColor: string;
+}
 
 export default function EditCard() {
   const router = useRouter();
-  const [todo, setTodo] = useState<Todo>();
-  const getCards = async () => {
-    await fetch(`/api/todo/${router.query.id}`)
-      .then((response) => response.json())
-      .then((json) => setTodo(json.todo));
-  };
-  useEffect(() => {
-    if (router.query.id) {
-      getCards();
-    }
-  }, [router]);
-
-  const { register, handleSubmit, watch } = useForm(
-    todo
-      ? {
-          defaultValues: {
-            title: todo?.title,
-            content: "",
-            date: new Date(),
-            importance: 1,
-            bgColor: "blue",
-          },
-        }
-      : {
-          defaultValues: {
-            title: "",
-            content: "",
-            date: new Date(),
-            importance: 1,
-            bgColor: "blue",
-          },
-        }
+  const { data, error } = useSWR<ITodoEditResponse>(
+    router.query.id && `/api/todo/${router.query.id}`
   );
+  const { register, handleSubmit, watch, reset } = useForm<IEditTodoForm>();
+
+  const onEditVaild = async (data: IEditTodoForm) => {
+    const response = await (
+      await fetch(`/api/todo/${router.query.id}`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+      })
+    ).json();
+    if (response.ok) {
+      router.push("/");
+    }
+  };
+
+  useEffect(() => {
+    if (data) {
+      reset({
+        title: data.todo.title,
+        content: data.todo.content,
+        date: data.todo.date,
+        importance: data.todo.importance,
+        bgColor: data.todo.bgColor,
+      });
+    }
+  }, [data]);
 
   const onPeriodChange = (date: any) => {
     const today = new Date();
@@ -47,7 +57,7 @@ export default function EditCard() {
   };
   return (
     <div className="fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10">
-      {todo && (
+      {data && (
         <div className="max-w-2xl bg-slate-600 mt-32 mx-auto p-8 rounded-xl shadow-2xl">
           <h3 className="text-xl font-bold text-white text-center">
             계획 수정하기
@@ -62,7 +72,7 @@ export default function EditCard() {
               >
                 <div className="flex justify-between items-center ">
                   <span className="text-xs text-white">
-                    {useDate(watch("date"))}
+                    {useDate(new Date(watch("date")))}
                   </span>
                   <div className="text-xs">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -91,7 +101,10 @@ export default function EditCard() {
               </div>
             </div>
             <div>
-              <form className="flex flex-col gap-2">
+              <form
+                className="flex flex-col gap-2"
+                onSubmit={handleSubmit(onEditVaild)}
+              >
                 <div className="flex flex-col gap-2">
                   <label className="text-white">제목</label>
                   <input
@@ -320,10 +333,16 @@ export default function EditCard() {
             </div>
           </div>
           <div className="flex justify-between mt-8">
-            <button className="w-72 p-2 rounded-xl bg-white hover:bg-gray-200">
+            <button
+              className="w-72 p-2 rounded-xl bg-white hover:bg-gray-200"
+              onClick={() => router.push(`/todo/${router.query.id}`)}
+            >
               취소하기
             </button>
-            <button className="w-72 p-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600">
+            <button
+              className="w-72 p-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600"
+              onClick={handleSubmit(onEditVaild)}
+            >
               수정하기
             </button>
           </div>

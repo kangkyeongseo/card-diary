@@ -17,7 +17,6 @@ export default function withHandler({
     const {
       session: { user },
     } = req;
-    console.log(user);
     if (req.method && !method.includes(req.method as any)) {
       return res.status(405).end();
     }
