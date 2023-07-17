@@ -6,9 +6,21 @@ import { NextApiRequest, NextApiResponse } from "next";
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {
     query: { id },
+    session: { user },
   } = req;
-  const diary = await client.diary.findUnique({ where: { id: Number(id) } });
-  return res.status(200).json({ ok: true, diary });
+  if (req.method === "GET") {
+    const diary = await client.diary.findUnique({ where: { id: Number(id) } });
+    return res.status(200).json({ ok: true, diary });
+  } else if (req.method === "POST") {
+    const {
+      body: { title, content, date, bgColor },
+    } = req;
+    await client.diary.update({
+      where: { id: Number(id) },
+      data: { title, content, date: new Date(date), bgColor },
+    });
+    return res.status(200).json({ ok: true });
+  }
 }
 
-export default withSession(withHandler({ method: ["GET"], handler }));
+export default withSession(withHandler({ method: ["GET", "POST"], handler }));
