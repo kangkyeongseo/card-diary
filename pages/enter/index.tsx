@@ -70,12 +70,12 @@ export default function Enter() {
         <Button
           bgColor="bg-indigo-500 hover:bg-indigo-600"
           text="가입하기"
-          onClick={() => router.push("/join")}
+          onClick={() => router.push("/enter/join")}
         />
         <Button
           bgColor="bg-slate-500 hover:bg-slate-600"
           text="아이디 / 비밀번호 찾기"
-          onClick={() => router.push("/info-search")}
+          onClick={() => router.push("/enter/search")}
         />
         <div className="flex flex-col">
           <span className="text-center text-red-500">
