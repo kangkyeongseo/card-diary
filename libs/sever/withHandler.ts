@@ -2,17 +2,22 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 type method = "GET" | "POST";
 
-interface ConfigProp {
+interface ConfigType {
   method: method[];
   handler: (req: NextApiRequest, res: NextApiResponse) => void;
   isPrivate?: Boolean;
+}
+
+export interface ResponseType {
+  ok: boolean;
+  [key: string]: any;
 }
 
 export default function withHandler({
   method,
   handler,
   isPrivate = true,
-}: ConfigProp) {
+}: ConfigType) {
   return async function (req: NextApiRequest, res: NextApiResponse) {
     const {
       session: { user },

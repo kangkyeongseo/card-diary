@@ -1,20 +1,19 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 import client from "@/libs/sever/client";
-import withHandler from "@/libs/sever/withHandler";
-import { withIronSessionApiRoute } from "iron-session/next";
-import { NextApiRequest, NextApiResponse } from "next";
+import withHandler, { ResponseType } from "@/libs/sever/withHandler";
 import withSession from "@/libs/sever/withSession";
 
 async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<{ ok: boolean; error?: string }>
+  res: NextApiResponse<ResponseType>
 ) {
   const {
     body: { userId, password },
   } = req;
   const user = await client.user.findUnique({ where: { userId } });
   if (!user) {
-    return res.status(400).json({ ok: false, error: "userId" });
+    return res.status(400).json({ ok: false, errorMessage: "userId" });
   }
   const confirmPassword = await bcrypt.compare(password, user.password);
   if (confirmPassword) {
@@ -22,7 +21,7 @@ async function handler(
     await req.session.save();
     res.status(200).json({ ok: true });
   } else {
-    res.status(400).json({ ok: false, error: "password" });
+    res.status(400).json({ ok: false, errorMessage: "password" });
   }
 }
 
