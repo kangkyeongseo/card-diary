@@ -32,17 +32,24 @@ export default function Members() {
         if (json.ok === true) {
           router.push("/enter");
         }
-        if (json.ok === false && json.error === "userId") {
+        if (json.ok === false && json.errorMessage === "userId") {
           setError(
             "userId",
             { message: "이미 사용중인 아이디 입니다." },
             { shouldFocus: true }
           );
         }
-        if (json.ok === false && json.error === "email") {
+        if (json.ok === false && json.errorMessage === "email") {
           setError(
             "email",
             { message: "이미 사용중인 이메일 입니다." },
+            { shouldFocus: true }
+          );
+        }
+        if (json.ok === false && json.errorMessage === "confirmPassword") {
+          setError(
+            "confirmPassword",
+            { message: "비밀번호가 서로 일치하지 않습니다." },
             { shouldFocus: true }
           );
         }
@@ -82,9 +89,8 @@ export default function Members() {
         <Button text="가입하기" bgColor="bg-blue-500 hover:bg-blue-600" />
         <span className="text-center text-red-500">
           {errors.userId?.message}
-        </span>
-        <span className="text-center text-red-500">
           {errors.email?.message}
+          {errors.confirmPassword?.message}
         </span>
       </form>
     </BoxLayout>
