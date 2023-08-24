@@ -1,21 +1,21 @@
 import { useRouter } from "next/router";
 
-interface LayoutProp {
+interface BoxLayoutProp {
   title: string;
   canGoBack?: boolean;
   plusMember?: (arg: boolean) => void;
   children: React.ReactNode;
 }
 
-export default function Layout({
+export default function BoxLayout({
   title,
   canGoBack,
   plusMember,
   children,
-}: LayoutProp) {
+}: BoxLayoutProp) {
   const router = useRouter();
   return (
-    <div className="w-full max-w-lg min-h-[500px] bg-slate-300 mt-16 mx-auto rounded-2xl shadow-2xl">
+    <div className="max-w-lg min-h-[500px] bg-slate-300 mt-16 mx-auto rounded-2xl shadow-2xl">
       <div className="grid grid-cols-3 justify-center items-center bg-blue-500 text-white rounded-t-2xl px-6 py-4">
         {canGoBack ? (
           <div onClick={() => router.back()} className="cursor-pointer">

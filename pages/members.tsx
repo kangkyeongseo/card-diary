@@ -1,4 +1,4 @@
-import Layout from "@/components/Layout";
+import BoxLayout from "@/components/BoxLayout";
 import Popup from "@/components/Popuo";
 import { useState } from "react";
 
@@ -9,7 +9,7 @@ export default function Members() {
   const [deleteMember, setDeleteMember] = useState(false);
   return (
     <>
-      <Layout title="구성원" canGoBack={true} plusMember={setAddMember}>
+      <BoxLayout title="구성원" canGoBack={true} plusMember={setAddMember}>
         <ul className="flex flex-col gap-2 p-4 ">
           <li className="flex justify-between px-8 py-6 border border-slate-500 bg-slate-200 shadow-sm rounded-xl relative  ">
             <div>
@@ -72,7 +72,7 @@ export default function Members() {
             </div>
           </li>
         </ul>
-      </Layout>
+      </BoxLayout>
       {/* 맴버 추가하기 */}
       {addMember ? <Popup setAddList={setAddMember} memberList={true} /> : null}
       {/* 맴버 이름 수정하기 */}

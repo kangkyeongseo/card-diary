@@ -1,6 +1,6 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import Layout from "@/components/Layout";
+import BoxLayout from "@/components/BoxLayout";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
@@ -49,7 +49,7 @@ export default function Members() {
       });
   };
   return (
-    <Layout title="가입하기" canGoBack={true}>
+    <BoxLayout title="가입하기" canGoBack={true}>
       <form
         className="flex flex-col gap-3 px-8 py-12"
         onSubmit={handleSubmit(onValid)}
@@ -79,7 +79,7 @@ export default function Members() {
           type="password"
           register={register("confirmPassword", { required: true })}
         />
-        <Button text="가입하기" color="blue" />
+        <Button text="가입하기" bgColor="bg-blue-500 hover:bg-blue-600" />
         <span className="text-center text-red-500">
           {errors.userId?.message}
         </span>
@@ -87,6 +87,6 @@ export default function Members() {
           {errors.email?.message}
         </span>
       </form>
-    </Layout>
+    </BoxLayout>
   );
 }

@@ -1,6 +1,6 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import Layout from "@/components/Layout";
+import BoxLayout from "@/components/BoxLayout";
 import { useForm } from "react-hook-form";
 
 interface PasswordChangeForm {
@@ -13,7 +13,7 @@ export default function PasswordChange() {
   const { register, handleSubmit } = useForm<PasswordChangeForm>();
   const onValid = (data: PasswordChangeForm) => {};
   return (
-    <Layout title="비밀번호 변경하기" canGoBack={true}>
+    <BoxLayout title="비밀번호 변경하기" canGoBack={true}>
       <form
         className="flex flex-col gap-3 px-8 mt-12"
         onSubmit={handleSubmit(onValid)}
@@ -35,6 +35,6 @@ export default function PasswordChange() {
         />
         <Button text="비밀번호 변경하기" color="blue" />
       </form>
-    </Layout>
+    </BoxLayout>
   );
 }

@@ -1,6 +1,6 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import Layout from "@/components/Layout";
+import BoxLayout from "@/components/BoxLayout";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -18,7 +18,7 @@ export default function Members() {
     console.log(data);
   };
   return (
-    <Layout title={title} canGoBack={true}>
+    <BoxLayout title={title} canGoBack={true}>
       <div>
         <ul className="grid grid-cols-2 items-center bg-slate-500 text-white uppercase text-xs mx-32 mt-12 rounded-2xl shadow-md">
           <li
@@ -81,6 +81,6 @@ export default function Members() {
           </>
         ) : null}
       </form>
-    </Layout>
+    </BoxLayout>
   );
 }

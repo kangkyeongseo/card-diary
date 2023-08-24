@@ -1,4 +1,4 @@
-import Layout from "@/components/Layout";
+import BoxLayout from "@/components/BoxLayout";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -16,7 +16,7 @@ export default function Setting() {
       });
   };
   return (
-    <Layout title="설정" canGoBack={true}>
+    <BoxLayout title="설정" canGoBack={true}>
       <ul className="flex flex-col justify-center items-center  gap-2 mt-8 text-gray-700">
         <li className="cursor-pointer hover:text-gray-900">
           <Link href={"/setting/name-change"}>닉네임 변경</Link>
@@ -28,6 +28,6 @@ export default function Setting() {
           로그아웃
         </li>
       </ul>
-    </Layout>
+    </BoxLayout>
   );
 }
