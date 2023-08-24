@@ -4,17 +4,17 @@ import BoxLayout from "@/components/BoxLayout";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-interface InfoSearchForm {
+interface AuthSearchForm {
   email: string;
   userName?: string;
   userId?: string;
 }
 
 export default function Members() {
-  const { register, handleSubmit } = useForm<InfoSearchForm>();
+  const { register, handleSubmit } = useForm<AuthSearchForm>();
   const [title, setTitle] = useState("아이디 찾기");
   const [find, setFind] = useState<"id" | "password">("id");
-  const onValid = (data: InfoSearchForm) => {
+  const onValid = (data: AuthSearchForm) => {
     console.log(data);
   };
   return (
