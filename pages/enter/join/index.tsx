@@ -28,7 +28,6 @@ export default function Members() {
     })
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
         if (json.ok === true) {
           router.push("/enter");
         }
