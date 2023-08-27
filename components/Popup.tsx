@@ -3,9 +3,11 @@ interface PopupProp {
   setEditList?: (value: React.SetStateAction<boolean>) => void;
   setMemberlist?: (value: React.SetStateAction<boolean>) => void;
   setAddChildList?: (value: React.SetStateAction<boolean>) => void;
+  setIsPersonalInformationPopup?: (value: boolean) => void;
   childList?: boolean;
   memberList?: boolean;
-  kind?: "add" | "edit" | "delete" | "member";
+  searchedId?: string;
+  kind?: "add" | "edit" | "delete" | "member" | "personalInformation";
 }
 
 export default function Popup({
@@ -13,8 +15,10 @@ export default function Popup({
   setEditList,
   setMemberlist,
   setAddChildList,
+  setIsPersonalInformationPopup,
   childList,
   memberList,
+  searchedId,
   kind = "add",
 }: PopupProp) {
   return (
@@ -165,6 +169,35 @@ export default function Popup({
               </label>
             </div>
           </form>
+        </div>
+      ) : null}
+      {kind === "personalInformation" ? (
+        <div className="flex flex-col max-w-md bg-slate-600 text-white  mt-64 mx-auto px-3 pt-3 pb-10 rounded-xl shadow-2xl">
+          <div className="flex justify-end">
+            <div
+              className="cursor-pointer"
+              onClick={() => setIsPersonalInformationPopup!(false)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 text-center mb-2">
+            <span>회원님의 ID는 다음과 같습니다.</span>
+            <span>{searchedId}</span>
+          </div>
         </div>
       ) : null}
     </div>
