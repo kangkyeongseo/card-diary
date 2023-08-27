@@ -1,5 +1,5 @@
 import BoxLayout from "@/components/BoxLayout";
-import Popup from "@/components/Popuo";
+import Popup from "@/components/Popup";
 import { useState } from "react";
 
 export default function Members() {

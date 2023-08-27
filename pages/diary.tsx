@@ -5,7 +5,7 @@ import { Diary } from "@prisma/client";
 import useSWR from "swr";
 import useUser from "@/libs/client/useUser";
 import Card from "@/components/Card";
-import Popup from "@/components/Popuo";
+import Popup from "@/components/Popup";
 
 interface IDiaryResponse {
   ok: boolean;

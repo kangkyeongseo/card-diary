@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Memo } from "@prisma/client";
 import useSWR from "swr";
 import Card from "@/components/Card";
-import Popup from "@/components/Popuo";
+import Popup from "@/components/Popup";
 
 interface IMemoResponse {
   ok: boolean;
