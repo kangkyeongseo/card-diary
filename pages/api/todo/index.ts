@@ -12,7 +12,7 @@ async function handler(
       session: { user },
     } = req;
     const {
-      body: { title, content, date, importance, bgColor },
+      body: { title, list, content, date, importance, bgColor },
     } = req;
     if (!user) return res.status(403).json({ ok: false });
     await client.todo.create({
@@ -25,6 +25,11 @@ async function handler(
         user: {
           connect: {
             id: user.id,
+          },
+        },
+        list: {
+          connect: {
+            id: list,
           },
         },
       },
