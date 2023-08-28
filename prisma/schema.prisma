@@ -18,9 +18,18 @@ model User {
   email String @unique
   userName String
   password String
+  todoList TodoList[]
   todos Todo[]
   diarts Diary[]
   memos Memo[]
+}
+
+model TodoList {
+  id Int @id @default(autoincrement())
+  title String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+  todos Todo[]
 }
 
 model Todo {
@@ -34,6 +43,8 @@ model Todo {
   updatedAt DateTime @updatedAt
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
+  list TodoList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId Int
 }
 
 model Diary {
