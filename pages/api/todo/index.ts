@@ -1,11 +1,11 @@
-import withHandler from "@/libs/sever/withHandler";
+import withHandler, { ResponseType } from "@/libs/sever/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
 import client from "@/libs/sever/client";
 import withSession from "@/libs/sever/withSession";
 
 async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<{ ok: boolean; [key: string]: any }>
+  res: NextApiResponse<ResponseType>
 ) {
   if (req.method === "POST") {
     const {
