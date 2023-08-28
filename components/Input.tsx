@@ -1,21 +1,33 @@
 import { UseFormRegisterReturn } from "react-hook-form";
 
 interface InputProp {
-  label: string;
   type: string;
   register: UseFormRegisterReturn;
+  label?: string;
+  placeholder?: string;
 }
 
-export default function Input({ label, type, register }: InputProp) {
+export default function Input({
+  type,
+  register,
+  label,
+  placeholder,
+}: InputProp) {
   return (
     <div className="relative flex items-center">
-      <div className="absolute left-4">
-        <span className="text-gray-500">{label}</span>
-      </div>
+      {label && (
+        <div className="absolute left-4">
+          <span className="text-gray-500">{label}</span>
+        </div>
+      )}
       <input
         {...register}
         type={type}
-        className="w-full px-28 py-2 border placeholder-gray-400 rounded-2xl shadow-md focus:outline-none"
+        placeholder={placeholder}
+        className={[
+          "w-full  py-2 border placeholder-gray-400 rounded-2xl shadow-md focus:outline-none",
+          label ? "pl-28 pr-4" : "px-4",
+        ].join(" ")}
       />
     </div>
   );
