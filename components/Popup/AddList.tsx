@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
+import { useSWRConfig } from "swr";
 import Input from "../Input";
 import Button from "../Button";
 
@@ -12,6 +13,7 @@ interface AddListForm {
 }
 
 export default function AddList({ setIsPopup }: AddListProp) {
+  const { mutate } = useSWRConfig();
   const { register, handleSubmit } = useForm<AddListForm>();
   const onValid = (data: AddListForm) => {
     fetch("/api/todo/list", {
@@ -22,6 +24,7 @@ export default function AddList({ setIsPopup }: AddListProp) {
       .then((response) => response.json())
       .then((json) => {
         if (json.ok) {
+          mutate("/api/todo/list");
           setIsPopup(false);
         } else if (!json.ok) {
           console.log(json.error);

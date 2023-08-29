@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
+import { useSWRConfig } from "swr";
 import Input from "../Input";
 import Button from "../Button";
 
@@ -13,6 +14,7 @@ interface EditListForm {
   title: string;
 }
 export default function EditList({ id, title, setIsPopup }: EditListProp) {
+  const { mutate } = useSWRConfig();
   const { register, handleSubmit } = useForm<EditListForm>({
     defaultValues: { title },
   });
@@ -25,6 +27,7 @@ export default function EditList({ id, title, setIsPopup }: EditListProp) {
       .then((response) => response.json())
       .then((json) => {
         if (json.ok) {
+          mutate("/api/todo/list");
           setIsPopup(false);
         } else if (!json.ok) {
           console.log(json);
