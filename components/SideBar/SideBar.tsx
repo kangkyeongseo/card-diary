@@ -1,16 +1,28 @@
-import Link from "next/link";
 import { useState } from "react";
-import Popup from "../Popup";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import useSWR from "swr";
 import List from "./List";
+import Popup from "../Popup/Popup";
+import { TodoList, User } from "@prisma/client";
 
-export default function SideBar() {
+interface SideBarProp {
+  user: User;
+}
+
+export interface TodoListResponse {
+  ok: boolean;
+  todoList: TodoList[];
+}
+
+export default function SideBar({ user }: SideBarProp) {
+  const searchParams = useSearchParams();
+  const search = searchParams.get("list");
+  const { data } = useSWR<TodoListResponse>("/api/todo/list");
   const [isAddListPopup, setIsAddListPopup] = useState(false);
-  const [isDeleteListPopup, setIsDeleteListPopup] = useState(false);
-  const [isEditListPopup, setIsEditListPopup] = useState(false);
-  const [isMemberListPopup, setIsMemberListPopup] = useState(false);
   return (
     <>
-      <div className="grid grid-rows-[130px_1fr] bg-slate-700 min-h-screen rounded-r-[15px]  shadow-2xl">
+      <div className="grid grid-rows-[130px_1fr] bg-slate-700 min-h-screen rounded-r-[15px] shadow-2xl">
         <div className="bg-blue-500 rounded-tr-[15px] p-4 shadow-xl">
           <div className="uppercase text-white text-md font-light text-center border-b-[0.5px] pb-2">
             card diary
@@ -18,7 +30,7 @@ export default function SideBar() {
           <div className="flex flex-col items-center gap-2 p-2 text-white">
             <div className="flex gap-1 text-lg font-bold">
               <span>안녕하세요,</span>
-              <span>이름</span>
+              <span>{user?.userName}님</span>
             </div>
             <div className="flex gap-2">
               <Link href={"/members"}>
@@ -81,28 +93,26 @@ export default function SideBar() {
               />
             </svg>
           </div>
-          <ul className="w-full p-4">
-            <List
-              name="main"
-              setIsEditListPopup={setIsEditListPopup}
-              setIsMemberListPopup={setIsMemberListPopup}
-              setIsDeleteListPopup={setIsDeleteListPopup}
-            />
+          <ul className="w-full p-4 ">
+            <li className="flex justify-between group/list">
+              <Link href={"/"}>
+                <span className={!search ? "font-bold" : "font-light"}>
+                  전체
+                </span>
+              </Link>
+            </li>
+            {data?.todoList.map((list) => (
+              <List
+                key={list.id}
+                id={list.id}
+                title={list.title}
+                selected={Number(search) === list.id}
+              />
+            ))}
           </ul>
         </div>
       </div>
-      {/* 리스트 추가하기 */}
-      {isAddListPopup ? <Popup setAddList={setIsAddListPopup} /> : null}
-      {/* 리스트 이름 수정하기 */}
-      {isEditListPopup ? (
-        <Popup setEditList={setIsEditListPopup} kind="edit" />
-      ) : null}
-      {/* 리스트 삭제하기 */}
-      {isDeleteListPopup ? <Popup kind="delete" /> : null}
-      {/* 리스트 맴버 관리 */}
-      {isMemberListPopup ? (
-        <Popup setMemberlist={setIsMemberListPopup} kind="member" />
-      ) : null}
+      {isAddListPopup && <Popup kind="add" setIsPopup={setIsAddListPopup} />}
     </>
   );
 }
