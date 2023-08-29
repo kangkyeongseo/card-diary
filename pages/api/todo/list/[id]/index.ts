@@ -9,17 +9,32 @@ async function handler(
 ) {
   const {
     query: { id },
-    body: { title },
   } = req;
-  try {
-    await client.todoList.update({
-      where: { id: Number(id) },
-      data: { title },
-    });
-    res.status(200).json({ ok: true });
-  } catch (error) {
-    res.status(500).json({ ok: false });
+
+  if (req.method === "POST") {
+    const {
+      body: { title },
+    } = req;
+    try {
+      await client.todoList.update({
+        where: { id: Number(id) },
+        data: { title },
+      });
+      res.status(200).json({ ok: true });
+    } catch (error) {
+      res.status(500).json({ ok: false });
+    }
+  }
+  if (req.method === "DELETE") {
+    try {
+      await client.todoList.delete({ where: { id: Number(id) } });
+      res.status(200).json({ ok: true });
+    } catch (error) {
+      res.status(500).json({ ok: false });
+    }
   }
 }
 
-export default withSession(withHandler({ method: ["POST"], handler }));
+export default withSession(
+  withHandler({ method: ["POST", "DELETE"], handler })
+);
