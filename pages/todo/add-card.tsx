@@ -1,27 +1,33 @@
-import useDate from "@/libs/client/useDate";
 import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
+import useSWR from "swr";
+import useDate from "@/libs/client/useDate";
+import { TodoListResponse } from "@/components/SideBar/SideBar";
 
 interface AddTodoForm {
   title: string;
+  list: string;
   content: string;
-  date: Date;
+  date: string;
   importance: number;
   bgColor: "blue" | "green" | "yellow" | "slate" | "red";
 }
 
 export default function AddCard() {
-  console.log(useDate(new Date()), typeof useDate(new Date()));
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const todoListId = searchParams.get("list");
   const { register, handleSubmit, watch } = useForm<AddTodoForm>({
     defaultValues: {
       title: "",
       content: "",
-      date: new Date(),
+      date: new Date().toISOString().slice(0, 10),
       importance: 1,
       bgColor: "blue",
     },
   });
+  const { data } = useSWR<TodoListResponse>("/api/todo/list");
 
   const onPeriodChange = (date: Date) => {
     const today = new Date();
@@ -29,14 +35,20 @@ export default function AddCard() {
     return periodDate;
   };
 
-  const onTodoVaild = async (data: AddTodoForm) => {
-    await fetch("/api/todo", {
+  const onTodoVaild = (data: AddTodoForm) => {
+    fetch("/api/todo", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
-    });
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.ok) {
+          router.push("/");
+        }
+      });
   };
 
   return (
@@ -98,6 +110,20 @@ export default function AddCard() {
                 />
               </div>
               <div className="flex flex-col gap-2">
+                <label className="text-white">리스트</label>
+                <select
+                  className="px-2 py-1 border-none rounded-xl focus:outline-none"
+                  {...register("list", { required: true })}
+                  value={todoListId ? +todoListId : undefined}
+                >
+                  {data?.todoList.map((list) => (
+                    <option key={list.id} value={list.id}>
+                      {list.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
                 <label className="text-white">내용</label>
                 <input
                   {...register("content", { required: true })}
@@ -111,7 +137,6 @@ export default function AddCard() {
                 <input
                   {...register("date", {
                     required: true,
-                    value: new Date(),
                   })}
                   type="date"
                   className="px-2 py-1 border-none rounded-xl focus:outline-none"
