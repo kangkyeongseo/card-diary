@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-type method = "GET" | "POST";
+type method = "GET" | "POST" | "DELETE";
 
 interface ConfigType {
   method: method[];
