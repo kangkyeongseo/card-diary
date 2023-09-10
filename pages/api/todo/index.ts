@@ -1,5 +1,5 @@
-import withHandler, { ResponseType } from "@/libs/sever/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
+import withHandler, { ResponseType } from "@/libs/sever/withHandler";
 import client from "@/libs/sever/client";
 import withSession from "@/libs/sever/withSession";
 
@@ -27,9 +27,9 @@ async function handler(
             id: user.id,
           },
         },
-        list: {
+        todoList: {
           connect: {
-            id: list,
+            id: +list,
           },
         },
       },
@@ -38,9 +38,21 @@ async function handler(
   } else if (req.method === "GET") {
     const {
       session: { user },
+      query: { list },
     } = req;
-    const todos = await client.todo.findMany({ where: { userId: user.id } });
-    return res.status(200).json({ ok: true, todos });
+    // list가 없으면 전체 todo 데이터 불러오기
+    if (!list) {
+      const todos = await client.todo.findMany({ where: { userId: user.id } });
+      return res.status(200).json({ ok: true, todos });
+    } else {
+      const todoList = await client.todoList.findUnique({
+        where: { id: +list },
+      });
+      const todos = await client.todo.findMany({
+        where: { userId: user.id, todoListId: todoList?.id },
+      });
+      return res.status(200).json({ ok: true, todos });
+    }
   }
 }
 
