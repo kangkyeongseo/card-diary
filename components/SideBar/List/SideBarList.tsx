@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
-import Popup from "../Popup/Popup";
+import Popup from "../../Popup/Popup";
 
 interface ListProp {
   id: number;
@@ -8,7 +8,7 @@ interface ListProp {
   selected: boolean;
 }
 
-export default function List({ id, title, selected }: ListProp) {
+export default function SideBarList({ id, title, selected }: ListProp) {
   const [isDeleteListPopup, setIsDeleteListPopup] = useState(false);
   const [isEditListPopup, setIsEditListPopup] = useState(false);
   const [isMemberListPopup, setIsMemberListPopup] = useState(false);
@@ -67,7 +67,7 @@ export default function List({ id, title, selected }: ListProp) {
               />
             </svg>
           </div>
-          <Link href="/todo/add-card">
+          <Link href={`/todo/add-card?list=${id}`}>
             <div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -89,10 +89,20 @@ export default function List({ id, title, selected }: ListProp) {
       </li>
 
       {isEditListPopup && (
-        <Popup kind="edit" title={title} setIsPopup={setIsEditListPopup} />
+        <Popup
+          kind="edit"
+          id={id}
+          title={title}
+          setIsPopup={setIsEditListPopup}
+        />
       )}
       {isDeleteListPopup && (
-        <Popup kind="delete" setIsPopup={setIsDeleteListPopup} />
+        <Popup
+          kind="delete"
+          id={id}
+          title={title}
+          setIsPopup={setIsDeleteListPopup}
+        />
       )}
       {isMemberListPopup && (
         <Popup kind="member" setIsPopup={setIsMemberListPopup} />
