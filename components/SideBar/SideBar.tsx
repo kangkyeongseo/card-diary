@@ -1,24 +1,17 @@
 import { useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import useSWR from "swr";
-import List from "./List";
+import { User } from "@prisma/client";
 import Popup from "../Popup/Popup";
-import { TodoList, User } from "@prisma/client";
+import SideBarLists from "./Lists/SideBarLists";
+
+export type listType = "todo" | "diary" | "memo";
 
 interface SideBarProp {
   user: User;
+  listType: listType;
 }
 
-export interface TodoListResponse {
-  ok: boolean;
-  todoList: TodoList[];
-}
-
-export default function SideBar({ user }: SideBarProp) {
-  const searchParams = useSearchParams();
-  const search = searchParams.get("list");
-  const { data } = useSWR<TodoListResponse>("/api/todo/list");
+export default function SideBar({ user, listType }: SideBarProp) {
   const [isAddListPopup, setIsAddListPopup] = useState(false);
   return (
     <>
@@ -93,23 +86,7 @@ export default function SideBar({ user }: SideBarProp) {
               />
             </svg>
           </div>
-          <ul className="w-full p-4 ">
-            <li className="flex justify-between group/list">
-              <Link href={"/"}>
-                <span className={!search ? "font-bold" : "font-light"}>
-                  전체
-                </span>
-              </Link>
-            </li>
-            {data?.todoList.map((list) => (
-              <List
-                key={list.id}
-                id={list.id}
-                title={list.title}
-                selected={Number(search) === list.id}
-              />
-            ))}
-          </ul>
+          <SideBarLists listType={listType} />
         </div>
       </div>
       {isAddListPopup && <Popup kind="add" setIsPopup={setIsAddListPopup} />}

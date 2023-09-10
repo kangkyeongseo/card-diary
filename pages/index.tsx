@@ -24,7 +24,7 @@ export default function Home() {
 
   return (
     <div className="grid grid-cols-[300px_1fr] ">
-      <SideBar user={user} />
+      <SideBar user={user} listType="todo" />
       <div className="flex flex-col p-12">
         <ul className="grid grid-cols-3 items-center w-full max-w-xl bg-slate-700 rounded-[20px] mx-auto mb-12 shadow-2xl text-white">
           <li
