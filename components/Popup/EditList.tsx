@@ -6,6 +6,7 @@ import Button from "../Button";
 
 interface EditListProp {
   id: number;
+  listType: string;
   title: string;
   setIsPopup: Dispatch<SetStateAction<boolean>>;
 }
@@ -13,13 +14,18 @@ interface EditListProp {
 interface EditListForm {
   title: string;
 }
-export default function EditList({ id, title, setIsPopup }: EditListProp) {
+export default function EditList({
+  id,
+  listType,
+  title,
+  setIsPopup,
+}: EditListProp) {
   const { mutate } = useSWRConfig();
   const { register, handleSubmit } = useForm<EditListForm>({
     defaultValues: { title },
   });
   const onValid = (data: EditListForm) => {
-    fetch(`/api/todo/list/${id}`, {
+    fetch(`/api/${listType}/list/${id}`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },
@@ -27,7 +33,7 @@ export default function EditList({ id, title, setIsPopup }: EditListProp) {
       .then((response) => response.json())
       .then((json) => {
         if (json.ok) {
-          mutate("/api/todo/list");
+          mutate(`/api/${listType}/list`);
           setIsPopup(false);
         } else if (!json.ok) {
           console.log(json);

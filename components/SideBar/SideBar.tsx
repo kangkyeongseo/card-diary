@@ -89,7 +89,9 @@ export default function SideBar({ user, listType }: SideBarProp) {
           <SideBarLists listType={listType} />
         </div>
       </div>
-      {isAddListPopup && <Popup kind="add" setIsPopup={setIsAddListPopup} />}
+      {isAddListPopup && (
+        <Popup kind="add" listType={listType} setIsPopup={setIsAddListPopup} />
+      )}
     </>
   );
 }

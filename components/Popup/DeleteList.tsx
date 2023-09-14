@@ -6,21 +6,27 @@ import Button from "../Button";
 
 interface DeleteListProp {
   id: number;
+  listType: string;
   title: string;
   setIsPopup: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function DeleteList({ id, title, setIsPopup }: DeleteListProp) {
+export default function DeleteList({
+  id,
+  listType,
+  title,
+  setIsPopup,
+}: DeleteListProp) {
   const { mutate } = useSWRConfig();
   const handleDeleteBtn = () => {
-    fetch(`/api/todo/list/${id}`, {
+    fetch(`/api/${listType}/list/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     })
       .then((response) => response.json())
       .then((json) => {
         if (json.ok) {
-          mutate("/api/todo/list");
+          mutate(`/api/${listType}/list`);
           setIsPopup(false);
         } else if (!json.ok) {
           console.log(json);

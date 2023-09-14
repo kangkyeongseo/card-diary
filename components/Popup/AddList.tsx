@@ -5,6 +5,7 @@ import Input from "../Input";
 import Button from "../Button";
 
 interface AddListProp {
+  listType: string;
   setIsPopup: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -12,11 +13,11 @@ interface AddListForm {
   title: string;
 }
 
-export default function AddList({ setIsPopup }: AddListProp) {
+export default function AddList({ listType, setIsPopup }: AddListProp) {
   const { mutate } = useSWRConfig();
   const { register, handleSubmit } = useForm<AddListForm>();
   const onValid = (data: AddListForm) => {
-    fetch("/api/todo/list", {
+    fetch(`/api/${listType}/list`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },
@@ -24,7 +25,7 @@ export default function AddList({ setIsPopup }: AddListProp) {
       .then((response) => response.json())
       .then((json) => {
         if (json.ok) {
-          mutate("/api/todo/list");
+          mutate(`/api/${listType}/list`);
           setIsPopup(false);
         } else if (!json.ok) {
           console.log(json.error);

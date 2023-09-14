@@ -91,6 +91,7 @@ export default function SideBarTodoList({ id, title, selected }: ListProp) {
       {isEditListPopup && (
         <Popup
           kind="edit"
+          listType="todo"
           id={id}
           title={title}
           setIsPopup={setIsEditListPopup}
@@ -99,13 +100,18 @@ export default function SideBarTodoList({ id, title, selected }: ListProp) {
       {isDeleteListPopup && (
         <Popup
           kind="delete"
+          listType="todo"
           id={id}
           title={title}
           setIsPopup={setIsDeleteListPopup}
         />
       )}
       {isMemberListPopup && (
-        <Popup kind="member" setIsPopup={setIsMemberListPopup} />
+        <Popup
+          kind="member"
+          listType="todo"
+          setIsPopup={setIsMemberListPopup}
+        />
       )}
     </>
   );
