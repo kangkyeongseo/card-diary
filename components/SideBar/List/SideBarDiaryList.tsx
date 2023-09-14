@@ -106,6 +106,7 @@ export default function SideBarDiaryList({ id, title }: DiaryListProp) {
       {isDeleteListPopup && (
         <Popup
           kind="delete"
+          listType="diary"
           id={id}
           title={title}
           setIsPopup={setIsDeleteListPopup}
