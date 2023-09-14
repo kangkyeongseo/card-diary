@@ -8,7 +8,7 @@ interface ListProp {
   selected: boolean;
 }
 
-export default function SideBarList({ id, title, selected }: ListProp) {
+export default function SideBarTodoList({ id, title, selected }: ListProp) {
   const [isDeleteListPopup, setIsDeleteListPopup] = useState(false);
   const [isEditListPopup, setIsEditListPopup] = useState(false);
   const [isMemberListPopup, setIsMemberListPopup] = useState(false);
