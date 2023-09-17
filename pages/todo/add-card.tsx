@@ -3,7 +3,7 @@ import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import useDate from "@/libs/client/useDate";
-import { TodoListResponse } from "@/components/SideBar/SideBar";
+import { TodoListResponse } from "@/components/SideBar/Lists/SideBarLists";
 
 interface AddTodoForm {
   title: string;

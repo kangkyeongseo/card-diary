@@ -14,7 +14,7 @@ async function handler(
   if (!user) return res.status(403).json({ ok: false });
   if (req.method === "POST") {
     const {
-      body: { title, content, date, bgColor },
+      body: { title, list, content, date, bgColor },
     } = req;
     await client.diary.create({
       data: {
@@ -25,6 +25,11 @@ async function handler(
         user: {
           connect: {
             id: user.id,
+          },
+        },
+        diaryList: {
+          connect: {
+            id: +list,
           },
         },
       },

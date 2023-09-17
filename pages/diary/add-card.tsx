@@ -1,15 +1,31 @@
-import useDate from "@/libs/client/useDate";
+import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
+import useSWR from "swr";
+import useDate from "@/libs/client/useDate";
+import { DiaryListResponse } from "@/components/SideBar/Lists/SideBarLists";
+
+interface AddDiaryForm {
+  title: string;
+  list: string;
+  content: string;
+  date: string;
+  bgColor: "blue" | "green" | "yellow" | "slate" | "red";
+}
 
 export default function AddCard() {
-  const { register, handleSubmit, watch } = useForm({
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const diaryListId = searchParams.get("list");
+  const { register, handleSubmit, watch } = useForm<AddDiaryForm>({
     defaultValues: {
       title: "",
       content: "",
-      date: new Date(),
+      date: new Date().toISOString().slice(0, 10),
       bgColor: "blue",
     },
   });
+  const { data } = useSWR<DiaryListResponse>("/api/diary/list");
 
   const onDiaryVaild = async (data: any) => {
     await fetch("/api/diary", {
@@ -18,7 +34,13 @@ export default function AddCard() {
       headers: {
         "Content-Type": "application/json",
       },
-    });
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.ok) {
+          router.push("/diary");
+        }
+      });
   };
 
   return (
@@ -60,6 +82,20 @@ export default function AddCard() {
                   type="text"
                   className="px-2 py-1 border-none rounded-xl focus:outline-none"
                 />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-white">리스트</label>
+                <select
+                  className="px-2 py-1 border-none rounded-xl focus:outline-none"
+                  {...register("list", { required: true })}
+                  value={diaryListId ? +diaryListId : undefined}
+                >
+                  {data?.diaryList.map((list) => (
+                    <option key={list.id} value={list.id}>
+                      {list.title}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-white">내용</label>
@@ -181,7 +217,10 @@ export default function AddCard() {
           </div>
         </div>
         <div className="flex justify-between mt-8">
-          <button className="w-72 p-2 rounded-xl bg-white hover:bg-gray-200">
+          <button
+            className="w-72 p-2 rounded-xl bg-white hover:bg-gray-200"
+            onClick={() => router.push("/")}
+          >
             취소하기
           </button>
           <button
