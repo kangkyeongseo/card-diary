@@ -26,12 +26,23 @@ async function handler(
       },
     });
     return res.status(200).json({ ok: true });
-  } else if (req.method === "GET") {
+  }
+  if (req.method === "GET") {
     const todo = await client.todo.findUnique({
       where: { id: Number(id) },
     });
     return res.status(200).json({ ok: true, todo });
   }
+  if (req.method === "DELETE") {
+    try {
+      await client.todo.delete({ where: { id: Number(id) } });
+      res.status(200).json({ ok: true });
+    } catch (error) {
+      res.status(500).json({ ok: false });
+    }
+  }
 }
 
-export default withSession(withHandler({ method: ["GET", "POST"], handler }));
+export default withSession(
+  withHandler({ method: ["GET", "POST", "DELETE"], handler })
+);
