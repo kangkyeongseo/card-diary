@@ -1,5 +1,6 @@
+import Link from "next/link";
 import useDate from "@/libs/client/useDate";
-import { useRouter } from "next/router";
+import { useSWRConfig } from "swr";
 
 interface CardProp {
   id: number;
@@ -9,6 +10,7 @@ interface CardProp {
   period?: number;
   importance?: number;
   bgColor: string;
+  isChecked?: boolean;
   kind?: "todo" | "diary" | "memo";
 }
 
@@ -20,9 +22,21 @@ export default function Card({
   period,
   importance,
   bgColor,
+  isChecked = false,
   kind = "todo",
 }: CardProp) {
-  const router = useRouter();
+  const { mutate } = useSWRConfig();
+  const onChecked = () => {
+    fetch(`/api/todo/${id}/check`, { method: "POST" })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.ok) {
+          mutate(`/api/todo`);
+        } else if (!json.ok) {
+          console.log(json.error);
+        }
+      });
+  };
   return (
     <div
       key={id}
@@ -59,32 +73,16 @@ export default function Card({
           <div className="text-sm text-white mt-4 absolute bottom-2 right-4">
             <div>{period}일 남음</div>
           </div>
-          <div className="absolute top-0 left-0 rounded-xl w-full h-full bg-[rgba(0,0,0,0.5)] hidden text-white group-hover/card:flex items-end justify-center">
-            <div className="flex items-center gap-8 mb-12">
-              <div onClick={() => router.push(`/todo/${id}/edit-card`)}>
-                <svg
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-8 h-8 hover:text-slate-900"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
-                  />
-                </svg>
-              </div>
-              <div>
+          {isChecked && (
+            <div className="absolute top-0 left-0 rounded-xl w-full h-full bg-[rgba(0,0,0,0.5)] text-white flex justify-center items-center">
+              <div onClick={onChecked} className="z-10">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"
                   stroke="currentColor"
-                  className="w-10 h-10 hover:text-slate-900"
+                  className="w-16 h-16 hover:text-slate-900"
                 >
                   <path
                     strokeLinecap="round"
@@ -94,7 +92,82 @@ export default function Card({
                 </svg>
               </div>
             </div>
-          </div>
+          )}
+          {isChecked ? (
+            <div className="absolute top-0 left-0 rounded-xl w-full h-full  hidden text-white group-hover/card:flex items-end justify-center">
+              <div className="flex items-center gap-8 mb-12">
+                <Link href={`/todo/${id}/edit-card`}>
+                  <svg
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-10 h-10 hover:text-slate-900"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                    />
+                  </svg>
+                </Link>
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-10 h-10 hover:text-slate-900"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="absolute top-0 left-0 rounded-xl w-full h-full bg-[rgba(0,0,0,0.5)] hidden text-white group-hover/card:flex items-end justify-center">
+              <div className="flex items-center gap-8 mb-12">
+                <Link href={`/todo/${id}/edit-card`}>
+                  <svg
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-10 h-10 hover:text-slate-900"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                    />
+                  </svg>
+                </Link>
+                <div onClick={onChecked}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-10 h-10 hover:text-slate-900"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          )}
         </>
       ) : null}
       {kind === "diary" ? (

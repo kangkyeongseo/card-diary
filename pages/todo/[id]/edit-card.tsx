@@ -335,7 +335,7 @@ export default function EditCard() {
           <div className="flex justify-between mt-8">
             <button
               className="w-72 p-2 rounded-xl bg-white hover:bg-gray-200"
-              onClick={() => router.push(`/todo/${router.query.id}`)}
+              onClick={() => router.back()}
             >
               취소하기
             </button>

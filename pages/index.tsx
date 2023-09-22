@@ -60,17 +60,17 @@ export default function Home() {
         </ul>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(14rem,max-content))] justify-center gap-8">
           {data?.todos?.map((todo) => (
-            <Link href={`/todo/${todo.id}`} key={todo.id}>
-              <Card
-                id={todo.id}
-                title={todo.title}
-                contents={todo.content}
-                date={todo.date}
-                period={1}
-                importance={todo.importance}
-                bgColor={todo.bgColor}
-              />
-            </Link>
+            <Card
+              key={todo.id}
+              id={todo.id}
+              title={todo.title}
+              contents={todo.content}
+              date={todo.date}
+              period={1}
+              importance={todo.importance}
+              bgColor={todo.bgColor}
+              isChecked={todo.isChecked}
+            />
           ))}
           <div
             className="flex justify-center items-center w-full max-w-[14rem] h-80 rounded-xl border border-dashed text-white hover:scale-105"

@@ -22,6 +22,7 @@ async function handler(
         date: new Date(date),
         importance: +importance,
         bgColor,
+        isChecked: false,
         user: {
           connect: {
             id: user.id,
