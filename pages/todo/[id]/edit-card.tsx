@@ -1,9 +1,10 @@
 import { Todo } from "@prisma/client";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import useDate from "@/libs/client/useDate";
+import { TodoListResponse } from "@/components/SideBar/Lists/SideBarLists";
 
 interface ITodoEditResponse {
   ok: boolean;
@@ -12,6 +13,7 @@ interface ITodoEditResponse {
 
 interface IEditTodoForm {
   title: string;
+  list: string;
   content: string;
   date: Date;
   importance: number;
@@ -23,6 +25,7 @@ export default function EditCard() {
   const { data, error } = useSWR<ITodoEditResponse>(
     router.query.id && `/api/todo/${router.query.id}`
   );
+  const { data: todoListData } = useSWR<TodoListResponse>("/api/todo/list");
   const { register, handleSubmit, watch, reset } = useForm<IEditTodoForm>();
 
   const onEditVaild = async (data: IEditTodoForm) => {
@@ -112,6 +115,20 @@ export default function EditCard() {
                     type="text"
                     className="px-2 py-1 border-none rounded-xl focus:outline-none"
                   />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-white">리스트</label>
+                  <select
+                    className="px-2 py-1 border-none rounded-xl focus:outline-none"
+                    {...register("list", { required: true })}
+                    value={data.todo.todoListId}
+                  >
+                    {todoListData?.todoList.map((list) => (
+                      <option key={list.id} value={list.id}>
+                        {list.title}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-white">내용</label>
