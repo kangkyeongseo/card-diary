@@ -3,13 +3,12 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  relationMode = "prisma"
 }
 
 model User {
@@ -20,7 +19,7 @@ model User {
   password String
   todoList TodoList[]
   todos Todo[]
-  diaryList DiaryList[]
+  diaryList DiaryList[]                       
   diarys Diary[]
   memoList MemoList[]
   memos Memo[]
@@ -41,12 +40,13 @@ model Todo {
   date DateTime
   importance Int
   bgColor String
+  isChecked Boolean
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
-  list TodoList @relation(fields: [listId], references: [id], onDelete: Cascade)
-  listId Int
+  todoList TodoList @relation(fields: [todoListId], references: [id], onDelete: Cascade)
+  todoListId Int
 }
 
 model DiaryList {
@@ -67,8 +67,8 @@ model Diary {
   updatedAt DateTime @updatedAt
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
-  list DiaryList @relation(fields: [listId], references: [id], onDelete: Cascade)
-  listId Int
+  diaryList DiaryList @relation(fields: [diaryListId], references: [id], onDelete: Cascade)
+  diaryListId Int
 }
 
 model MemoList {
@@ -89,6 +89,6 @@ model Memo {
   updatedAt DateTime @updatedAt
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
-  list MemoList @relation(fields: [listId], references: [id], onDelete: Cascade)
-  listId Int
+  memoList MemoList @relation(fields: [memoListId], references: [id], onDelete: Cascade)
+  memoListId Int
 }
