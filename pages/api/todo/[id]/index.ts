@@ -13,7 +13,7 @@ async function handler(
   } = req;
   if (req.method === "POST") {
     const {
-      body: { title, content, date, importance, bgColor },
+      body: { title, list, content, date, importance, bgColor },
     } = req;
     await client.todo.update({
       where: { id: Number(id) },
@@ -23,6 +23,11 @@ async function handler(
         date: new Date(date),
         importance: +importance,
         bgColor,
+        todoList: {
+          connect: {
+            id: +list,
+          },
+        },
       },
     });
     return res.status(200).json({ ok: true });
