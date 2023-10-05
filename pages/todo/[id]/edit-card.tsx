@@ -15,7 +15,7 @@ interface IEditTodoForm {
   title: string;
   list: string;
   content: string;
-  date: Date;
+  date: string;
   importance: number;
   bgColor: string;
 }
@@ -27,8 +27,7 @@ export default function EditCard() {
   );
   const { data: todoListData } = useSWR<TodoListResponse>("/api/todo/list");
   const { register, handleSubmit, watch, reset } = useForm<IEditTodoForm>();
-
-  const onEditVaild = async (data: IEditTodoForm) => {
+  const onEditValid = async (data: IEditTodoForm) => {
     const response = await (
       await fetch(`/api/todo/${router.query.id}`, {
         method: "POST",
@@ -46,7 +45,7 @@ export default function EditCard() {
       reset({
         title: data.todo.title,
         content: data.todo.content,
-        date: data.todo.date,
+        date: data?.todo.date.toString().slice(0, 10),
         importance: data.todo.importance,
         bgColor: data.todo.bgColor,
       });
@@ -106,7 +105,7 @@ export default function EditCard() {
             <div>
               <form
                 className="flex flex-col gap-2"
-                onSubmit={handleSubmit(onEditVaild)}
+                onSubmit={handleSubmit(onEditValid)}
               >
                 <div className="flex flex-col gap-2">
                   <label className="text-white">제목</label>
@@ -358,7 +357,7 @@ export default function EditCard() {
             </button>
             <button
               className="w-72 p-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600"
-              onClick={handleSubmit(onEditVaild)}
+              onClick={handleSubmit(onEditValid)}
             >
               수정하기
             </button>
