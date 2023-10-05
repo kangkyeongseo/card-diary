@@ -1,6 +1,7 @@
 import Link from "next/link";
 import useDate from "@/libs/client/useDate";
 import { useSWRConfig } from "swr";
+import { useRouter } from "next/router";
 
 interface CardProp {
   id: number;
@@ -25,13 +26,18 @@ export default function Card({
   isChecked = false,
   kind = "todo",
 }: CardProp) {
+  const router = useRouter();
   const { mutate } = useSWRConfig();
   const onChecked = () => {
     fetch(`/api/todo/${id}/check`, { method: "POST" })
       .then((response) => response.json())
       .then((json) => {
         if (json.ok) {
-          mutate(`/api/todo`);
+          mutate(
+            router.query.list
+              ? `/api/todo?list=${router.query.list}`
+              : "/api/todo"
+          );
         } else if (!json.ok) {
           console.log(json.error);
         }
