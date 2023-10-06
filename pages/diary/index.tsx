@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useSearchParams } from "next/navigation";
-import { Diary } from "@prisma/client";
 import useSWR from "swr";
+import { Diary } from "@prisma/client";
 import useUser from "@/libs/client/useUser";
 import Card from "@/components/Card";
 import SideBar from "@/components/SideBar/SideBar";
@@ -13,11 +12,36 @@ interface IDiaryResponse {
 }
 
 export default function Home() {
-  const searchParams = useSearchParams();
-  const search = searchParams.get("list");
   const router = useRouter();
   const { user } = useUser();
-  const { data, error } = useSWR<IDiaryResponse>("/api/diary");
+  const { data } = useSWR<IDiaryResponse>(
+    user
+      ? router.query.list
+        ? `/api/diary?list=${router.query.list}`
+        : "/api/diary"
+      : null
+  );
+  const [diarys, setDiarys] = useState<Diary[]>();
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    if (!router.query.month) {
+      setDiarys(data.diarys);
+    } else {
+      setDiarys(
+        data.diarys.filter((diary) => {
+          if (
+            new Date(diary.date).getMonth() ===
+            Number(router.query.month) - 1
+          ) {
+            return diary;
+          }
+        })
+      );
+    }
+  }, [data, router.query.month]);
 
   return (
     <div>
@@ -57,20 +81,23 @@ export default function Home() {
             </li>
           </ul>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(14rem,max-content))] justify-center items-center gap-8 ">
-            {data?.diarys.map((diary) => (
-              <Card
-                key={diary.id}
-                id={diary.id}
-                title={diary.title}
-                contents={diary.content}
-                date={diary.date}
-                bgColor={diary.bgColor}
-                kind="diary"
-              />
-            ))}
+            {diarys &&
+              diarys.map((diary) => (
+                <Card
+                  key={diary.id}
+                  id={diary.id}
+                  title={diary.title}
+                  contents={diary.content}
+                  date={diary.date}
+                  bgColor={diary.bgColor}
+                  kind="diary"
+                />
+              ))}
             <div
               className="flex justify-center items-center w-full max-w-[14rem] h-80 rounded-xl border border-dashed text-white hover:scale-105"
-              onClick={() => router.push(`/diary/add-card?list=${search}`)}
+              onClick={() =>
+                router.push(`/diary/add-card?list=${router.query.list}`)
+              }
             >
               <div>
                 <svg

@@ -36,9 +36,23 @@ async function handler(
     });
     return res.status(200).json({ ok: true });
   } else if (req.method === "GET") {
-    const diarys = await client.diary.findMany({ where: { userId: user.id } });
-    console.log(diarys);
-    return res.status(200).json({ ok: true, diarys });
+    const {
+      query: { list },
+    } = req;
+    if (!list) {
+      const diarys = await client.diary.findMany({
+        where: { userId: user.id },
+      });
+      return res.status(200).json({ ok: true, diarys });
+    } else {
+      const diaryList = await client.diaryList.findUnique({
+        where: { id: +list },
+      });
+      const diarys = await client.diary.findMany({
+        where: { userId: user.id, diaryListId: diaryList?.id },
+      });
+      return res.status(200).json({ ok: true, diarys });
+    }
   }
 }
 

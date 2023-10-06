@@ -48,7 +48,9 @@ export default function SideBarDiaryList({ id, title }: DiaryListProp) {
                 </svg>
               )}
             </div>
-            <span>{title}</span>
+            <Link href={`/diary?list=${id}`}>
+              <span>{title}</span>
+            </Link>
           </div>
           <div className="hidden group-hover/list:flex items-center gap-2 ">
             <div onClick={() => setIsDeleteListPopup(true)}>
@@ -76,8 +78,13 @@ export default function SideBarDiaryList({ id, title }: DiaryListProp) {
           ].join(" ")}
         >
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month) => (
-            <li className="w-full flex justify-between group/datelist">
-              <span>{month}월</span>
+            <li
+              className="w-full flex justify-between group/datelist"
+              key={month}
+            >
+              <Link href={`/diary?list=${id}&month=${month}`}>
+                <span>{month}월</span>
+              </Link>
               <div className="hidden group-hover/datelist:flex items-center gap-1 ">
                 <Link href={"/diary/add-card"}>
                   <div>
