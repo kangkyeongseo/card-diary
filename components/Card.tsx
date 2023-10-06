@@ -1,14 +1,15 @@
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import useDate from "@/libs/client/useDate";
-import { useSWRConfig } from "swr";
 import { useRouter } from "next/router";
+import { useSWRConfig } from "swr";
+import useDate from "@/libs/client/useDate";
+import usePeriod from "@/libs/client/usePeriod";
 
 interface CardProp {
   id: number;
   title: string;
   contents: string;
   date: Date;
-  period?: number;
   importance?: number;
   bgColor: string;
   isChecked?: boolean;
@@ -20,7 +21,6 @@ export default function Card({
   title,
   contents,
   date,
-  period,
   importance,
   bgColor,
   isChecked = false,
@@ -28,6 +28,8 @@ export default function Card({
 }: CardProp) {
   const router = useRouter();
   const { mutate } = useSWRConfig();
+  const [period, setPeriod] = useState(0);
+
   const onChecked = () => {
     fetch(`/api/todo/${id}/check`, { method: "POST" })
       .then((response) => response.json())
@@ -43,6 +45,11 @@ export default function Card({
         }
       });
   };
+
+  useEffect(() => {
+    setPeriod(usePeriod(new Date(date)));
+  }, [date]);
+
   return (
     <div
       key={id}

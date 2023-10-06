@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import useDate from "@/libs/client/useDate";
+import usePeriod from "@/libs/client/usePeriod";
 import { TodoListResponse } from "@/components/SideBar/Lists/SideBarLists";
 
 interface AddTodoForm {
@@ -28,12 +30,7 @@ export default function AddCard() {
     },
   });
   const { data } = useSWR<TodoListResponse>("/api/todo/list");
-
-  const onPeriodChange = (date: Date) => {
-    const today = new Date();
-    const periodDate = Math.round((+date - +today) / 1000 / 3600 / 24);
-    return periodDate;
-  };
+  const [period, setPeriod] = useState(0);
 
   const onTodoVaild = (data: AddTodoForm) => {
     fetch("/api/todo", {
@@ -50,6 +47,10 @@ export default function AddCard() {
         }
       });
   };
+
+  useEffect(() => {
+    setPeriod(usePeriod(new Date(watch("date"))));
+  }, [watch("date")]);
 
   return (
     <div className="fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10">
@@ -91,7 +92,7 @@ export default function AddCard() {
                 <div className="break-words">{watch("content")}</div>
               </div>
               <div className="text-sm text-white mt-4 absolute bottom-2 right-4">
-                <div>{onPeriodChange(new Date(watch("date")))}일 남음</div>
+                <div>{period}일 남음</div>
               </div>
             </div>
           </div>
