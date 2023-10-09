@@ -1,26 +1,23 @@
 import { useRouter } from "next/router";
-import useSWR from "swr";
-import { useSearchParams } from "next/navigation";
 import Card from "../Card";
-import { Todo } from "@prisma/client";
-import useUser from "@/libs/client/useUser";
+import { Diary, Memo, Todo } from "@prisma/client";
 import CardNavigation from "./CardNavigation/CardNavigation";
 
-interface TodoResponse {
-  ok: boolean;
-  todos: Todo[];
+interface CardTableProp {
+  kind?: "todo" | "diary" | "memo";
+  data?: CardTableData;
 }
 
-export default function CardTable() {
+interface CardTableData {
+  ok: boolean;
+  todos?: Todo[];
+  diarys?: Diary[];
+  memos?: Memo[];
+}
+
+export default function CardTable({ kind, data }: CardTableProp) {
   const router = useRouter();
-  const { user } = useUser();
-  const { data } = useSWR<TodoResponse>(
-    user
-      ? router.query.list
-        ? `/api/todo?list=${router.query.list}`
-        : "/api/todo"
-      : null
-  );
+
   return (
     <div className="flex flex-col p-12">
       <CardNavigation />
@@ -32,16 +29,35 @@ export default function CardTable() {
             title={todo.title}
             contents={todo.content}
             date={todo.date}
-            period={1}
-            importance={todo.importance}
             bgColor={todo.bgColor}
+            importance={todo.importance}
             isChecked={todo.isChecked}
+          />
+        ))}
+        {data?.diarys?.map((diary) => (
+          <Card
+            key={diary.id}
+            id={diary.id}
+            title={diary.title}
+            contents={diary.content}
+            date={diary.date}
+            bgColor={diary.bgColor}
+          />
+        ))}
+        {data?.memos?.map((memo) => (
+          <Card
+            key={memo.id}
+            id={memo.id}
+            title={memo.title}
+            contents={memo.content}
+            date={memo.date}
+            bgColor={memo.bgColor}
           />
         ))}
         <div
           className="flex justify-center items-center w-full max-w-[14rem] h-80 rounded-xl border border-dashed text-white hover:scale-105"
           onClick={() =>
-            router.push(`/todo/add-card?list=${router.query.list}`)
+            router.push(`/${kind}/add-card?list=${router.query.list}`)
           }
         >
           <div>
