@@ -46,6 +46,22 @@ export default function Card({
       });
   };
 
+  const onDelete = () => {
+    fetch(`/api/${kind}/${id}`, { method: "DELETE" })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.ok) {
+          mutate(
+            router.query.list
+              ? `/api/${kind}?list=${router.query.list}`
+              : `/api/${kind}`
+          );
+        } else if (!json.ok) {
+          console.log(json.error);
+        }
+      });
+  };
+
   useEffect(() => {
     setPeriod(usePeriod(new Date(date)));
   }, [date]);
@@ -125,7 +141,7 @@ export default function Card({
                     />
                   </svg>
                 </Link>
-                <div>
+                <div onClick={onDelete}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -216,7 +232,7 @@ export default function Card({
                   </svg>
                 </Link>
               </div>
-              <div>
+              <div onClick={onDelete}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -267,7 +283,7 @@ export default function Card({
                   />
                 </svg>
               </div>
-              <div>
+              <div onClick={onDelete}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

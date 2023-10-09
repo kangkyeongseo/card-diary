@@ -26,7 +26,16 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       },
     });
     return res.status(200).json({ ok: true });
+  } else if (req.method === "DELETE") {
+    try {
+      await client.diary.delete({ where: { id: Number(id) } });
+      res.status(200).json({ ok: true });
+    } catch (error) {
+      res.status(500).json({ ok: false });
+    }
   }
 }
 
-export default withSession(withHandler({ method: ["GET", "POST"], handler }));
+export default withSession(
+  withHandler({ method: ["GET", "POST", "DELETE"], handler })
+);
