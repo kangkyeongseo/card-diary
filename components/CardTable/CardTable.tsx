@@ -36,6 +36,7 @@ export default function CardTable({ kind, data }: CardTableProp) {
         ))}
         {data?.diarys?.map((diary) => (
           <Card
+            kind="diary"
             key={diary.id}
             id={diary.id}
             title={diary.title}
@@ -46,6 +47,7 @@ export default function CardTable({ kind, data }: CardTableProp) {
         ))}
         {data?.memos?.map((memo) => (
           <Card
+            kind="memo"
             key={memo.id}
             id={memo.id}
             title={memo.title}

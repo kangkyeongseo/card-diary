@@ -1,30 +1,54 @@
-import useDate from "@/libs/client/useDate";
-import { Diary } from "@prisma/client";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
+import useSWR from "swr";
+import useDate from "@/libs/client/useDate";
+import { Diary } from "@prisma/client";
+import { DiaryListResponse } from "@/components/SideBar/Lists/SideBarLists";
+
+interface DiaryResponse {
+  ok: boolean;
+  diary: Diary;
+}
+
+interface EditDiaryForm {
+  title: string;
+  list: string;
+  content: string;
+  date: string;
+  bgColor: string;
+}
 
 export default function EditCard() {
   const router = useRouter();
-  const [diary, setDiary] = useState<Diary>();
-  console.log(diary);
-  const getDiary = async () => {
-    const id = router.query.id;
-    const data = await (await fetch(`/api/diary/${id}`)).json();
-    setDiary(data);
+  const { data, error } = useSWR<DiaryResponse>(
+    router.query.id && `/api/diary/${router.query.id}`
+  );
+  const { data: diaryListData } = useSWR<DiaryListResponse>("/api/diary/list");
+  const { register, handleSubmit, watch, reset } = useForm<EditDiaryForm>();
+  const onEditValid = async (data: EditDiaryForm) => {
+    const response = await (
+      await fetch(`/api/diary/${router.query.id}`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+      })
+    ).json();
+    if (response.ok) {
+      router.push("/diary");
+    }
   };
+
   useEffect(() => {
-    if (router.query.id) getDiary();
-  }, [router]);
-  const { register, handleSubmit, watch } = useForm({
-    defaultValues: {
-      title: "",
-      content: "",
-      date: new Date(),
-      importance: 1,
-      bgColor: "blue",
-    },
-  });
+    if (data) {
+      reset({
+        title: data.diary.title,
+        content: data.diary.content,
+        date: data?.diary.date.toString().slice(0, 10),
+        bgColor: data.diary.bgColor,
+      });
+    }
+  }, [data]);
   return (
     <div className="fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10">
       <div className="max-w-2xl bg-slate-600 mt-32 mx-auto p-8 rounded-xl shadow-2xl">
@@ -41,7 +65,7 @@ export default function EditCard() {
             >
               <div className="flex justify-center items-center ">
                 <span className="text-sm text-white">
-                  {useDate(watch("date"))}
+                  {useDate(new Date(watch("date")))}
                 </span>
               </div>
               <div className="text-center text-lg font-bold text-white mt-4 break-words">
@@ -53,7 +77,10 @@ export default function EditCard() {
             </div>
           </div>
           <div>
-            <form className="flex flex-col gap-2">
+            <form
+              className="flex flex-col gap-2"
+              onSubmit={handleSubmit(onEditValid)}
+            >
               <div className="flex flex-col gap-2">
                 <label className="text-white">제목</label>
                 <input
@@ -61,6 +88,20 @@ export default function EditCard() {
                   type="text"
                   className="px-2 py-1 border-none rounded-xl focus:outline-none"
                 />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-white">리스트</label>
+                <select
+                  className="px-2 py-1 border-none rounded-xl focus:outline-none"
+                  {...register("list", { required: true })}
+                  value={data?.diary.diaryListId}
+                >
+                  {diaryListData?.diaryList.map((list) => (
+                    <option key={list.id} value={list.id}>
+                      {list.title}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-white">내용</label>
@@ -182,10 +223,16 @@ export default function EditCard() {
           </div>
         </div>
         <div className="flex justify-between mt-8">
-          <button className="w-72 p-2 rounded-xl bg-white hover:bg-gray-200">
+          <button
+            className="w-72 p-2 rounded-xl bg-white hover:bg-gray-200"
+            onClick={router.back}
+          >
             취소하기
           </button>
-          <button className="w-72 p-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600">
+          <button
+            className="w-72 p-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600"
+            onClick={handleSubmit(onEditValid)}
+          >
             수정하기
           </button>
         </div>

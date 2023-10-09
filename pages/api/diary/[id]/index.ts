@@ -13,11 +13,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(200).json({ ok: true, diary });
   } else if (req.method === "POST") {
     const {
-      body: { title, content, date, bgColor },
+      body: { title, list, content, date, bgColor },
     } = req;
     await client.diary.update({
       where: { id: Number(id) },
-      data: { title, content, date: new Date(date), bgColor },
+      data: {
+        title,
+        content,
+        date: new Date(date),
+        bgColor,
+        diaryList: { connect: { id: +list } },
+      },
     });
     return res.status(200).json({ ok: true });
   }
