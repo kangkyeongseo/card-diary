@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
-import { DiaryList, TodoList } from "@prisma/client";
+import { DiaryList, MemoList, TodoList } from "@prisma/client";
 import { listType } from "../SideBar";
 import SideBarTodoList from "../List/SideBarTodoList";
 import SideBarDiaryList from "../List/SideBarDiaryList";
+import SideBarMemoList from "../List/SideBarMemoList";
 import useUser from "@/libs/client/useUser";
 
 interface SideBarListsProp {
@@ -21,6 +22,11 @@ export interface DiaryListResponse {
   diaryList: DiaryList[];
 }
 
+export interface MemoListResponse {
+  ok: boolean;
+  memoList: MemoList[];
+}
+
 export default function SideBarLists({ listType }: SideBarListsProp) {
   const searchParams = useSearchParams();
   const search = searchParams.get("list");
@@ -29,6 +35,7 @@ export default function SideBarLists({ listType }: SideBarListsProp) {
   const { data: diaryList } = useSWR<DiaryListResponse>(
     user && "/api/diary/list"
   );
+  const { data: memoList } = useSWR<MemoListResponse>(user && "/api/memo/list");
   return (
     <ul className="w-full p-4 ">
       {listType === "todo" && (
@@ -57,6 +64,23 @@ export default function SideBarLists({ listType }: SideBarListsProp) {
           </li>
           {diaryList?.diaryList.map((list) => (
             <SideBarDiaryList key={list.id} id={list.id} title={list.title} />
+          ))}
+        </>
+      )}
+      {listType === "memo" && (
+        <>
+          <li className="flex justify-between group/list">
+            <Link href={"/"}>
+              <span className={!search ? "font-bold" : "font-light"}>전체</span>
+            </Link>
+          </li>
+          {memoList?.memoList.map((list) => (
+            <SideBarMemoList
+              key={list.id}
+              id={list.id}
+              title={list.title}
+              selected={Number(search) === list.id}
+            />
           ))}
         </>
       )}
