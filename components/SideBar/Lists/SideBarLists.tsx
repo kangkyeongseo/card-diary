@@ -70,7 +70,7 @@ export default function SideBarLists({ listType }: SideBarListsProp) {
       {listType === "memo" && (
         <>
           <li className="flex justify-between group/list">
-            <Link href={"/"}>
+            <Link href={"/memo"}>
               <span className={!search ? "font-bold" : "font-light"}>전체</span>
             </Link>
           </li>

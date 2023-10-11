@@ -10,7 +10,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!user) return res.status(403).json({ ok: false });
   if (req.method === "POST") {
     const {
-      body: { title, content, date, bgColor },
+      body: { title, list, content, date, bgColor },
     } = req;
     await client.memo.create({
       data: {
@@ -18,6 +18,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         content,
         date: new Date(date),
         bgColor,
+        memoList: {
+          connect: {
+            id: +list,
+          },
+        },
         user: {
           connect: {
             id: user.id,
@@ -27,8 +32,21 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     });
     res.status(200).json({ ok: true });
   } else if (req.method === "GET") {
-    const memos = await client.memo.findMany({ where: { userId: user.id } });
-    res.status(200).json({ ok: true, memos });
+    const {
+      query: { list },
+    } = req;
+    if (!list) {
+      const memos = await client.memo.findMany({ where: { userId: user.id } });
+      res.status(200).json({ ok: true, memos });
+    } else {
+      const memoList = await client.memoList.findUnique({
+        where: { id: +list },
+      });
+      const memos = await client.memo.findMany({
+        where: { userId: user.id, memoListId: memoList?.id },
+      });
+      return res.status(200).json({ ok: true, memos });
+    }
   }
 }
 

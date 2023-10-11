@@ -1,24 +1,49 @@
-import useDate from "@/libs/client/useDate";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
+import { useSearchParams } from "next/navigation";
+import useSWR from "swr";
+import useDate from "@/libs/client/useDate";
+import { MemoListResponse } from "@/components/SideBar/Lists/SideBarLists";
+
+interface AddMemoForm {
+  title: string;
+  list: string;
+  content: string;
+  date: string;
+  bgColor: "blue" | "green" | "yellow" | "slate" | "red";
+}
 
 export default function AddCard() {
-  const { register, handleSubmit, watch } = useForm({
+  const router = useRouter();
+  const { data } = useSWR<MemoListResponse>("/api/memo/list");
+  console.log(data);
+  const searchParams = useSearchParams();
+  const memoListId = searchParams.get("list");
+  const { register, handleSubmit, watch } = useForm<AddMemoForm>({
     defaultValues: {
       title: "",
+      list: memoListId ? memoListId : undefined,
       content: "",
-      date: new Date(),
+      date: new Date().toISOString().slice(0, 10),
       bgColor: "blue",
     },
   });
-  const onMemoVaild = async (data: any) => {
-    await fetch("/api/memo", {
+  const onMemoVaild = (data: any) => {
+    fetch("/api/memo", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
-    });
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.ok) {
+          router.push("/memo");
+        }
+      });
   };
+
   return (
     <div className="fixed top-0 w-full h-full bg-[rgba(0,0,0,0.8)] z-10">
       <div className="max-w-2xl bg-slate-600 mt-32 mx-auto p-8 rounded-xl shadow-2xl">
@@ -58,6 +83,20 @@ export default function AddCard() {
                   type="text"
                   className="px-2 py-1 border-none rounded-xl focus:outline-none"
                 />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-white">리스트</label>
+                <select
+                  className="px-2 py-1 border-none rounded-xl focus:outline-none"
+                  {...register("list", { required: true })}
+                  value={watch("list")}
+                >
+                  {data?.memoList.map((list) => (
+                    <option key={list.id} value={list.id}>
+                      {list.title}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-white">내용</label>
@@ -179,7 +218,10 @@ export default function AddCard() {
           </div>
         </div>
         <div className="flex justify-between mt-8">
-          <button className="w-72 p-2 rounded-xl bg-white hover:bg-gray-200">
+          <button
+            className="w-72 p-2 rounded-xl bg-white hover:bg-gray-200"
+            onClick={router.back}
+          >
             취소하기
           </button>
           <button
