@@ -1,7 +1,8 @@
+import { useRouter } from "next/router";
+import { set, useForm } from "react-hook-form";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import BoxLayout from "@/components/BoxLayout";
-import { useForm } from "react-hook-form";
 
 interface PasswordChangeForm {
   password: string;
@@ -10,8 +11,40 @@ interface PasswordChangeForm {
 }
 
 export default function PasswordChange() {
-  const { register, handleSubmit } = useForm<PasswordChangeForm>();
-  const onValid = (data: PasswordChangeForm) => {};
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<PasswordChangeForm>();
+  const onValid = (data: PasswordChangeForm) => {
+    if (data.newPassword !== data.confirmPassword) {
+      setError(
+        "newPassword",
+        { message: "비밀번호가 일치하지 않습니다." },
+        { shouldFocus: true }
+      );
+    } else {
+      fetch("/api/users/me?type=password", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          if (!json.ok) {
+            setError(
+              "password",
+              { message: "비밀번호가 맞지 않습니다." },
+              { shouldFocus: true }
+            );
+          } else {
+            router.push("/");
+          }
+        });
+    }
+  };
   return (
     <BoxLayout title="비밀번호 변경하기" canGoBack={true}>
       <form
@@ -33,7 +66,16 @@ export default function PasswordChange() {
           type="password"
           register={register("confirmPassword", { required: true })}
         />
-        <Button text="비밀번호 변경하기" color="blue" />
+        <Button
+          text="비밀번호 변경하기"
+          bgColor="bg-blue-500 hover:bg-blue-600"
+        />
+        <span className="text-center text-red-500">
+          {errors.password?.message}
+        </span>
+        <span className="text-center text-red-500">
+          {errors.newPassword?.message}
+        </span>
       </form>
     </BoxLayout>
   );

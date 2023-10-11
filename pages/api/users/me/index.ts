@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import bcrypt from "bcrypt";
 import withHandler, { ResponseType } from "@/libs/sever/withHandler";
 import withSession from "@/libs/sever/withSession";
 import client from "@/libs/sever/client";
@@ -24,6 +25,20 @@ async function handler(
         where: { id: session.user.id },
         data: { userName: body.userName },
       });
+    } else if (type === "password") {
+      const confirmPassword = await bcrypt.compare(
+        body.password,
+        user!.password
+      );
+      if (!confirmPassword) {
+        return res.status(400).json({ ok: false });
+      } else {
+        const hashPassword = await bcrypt.hash(body.newPassword, 10);
+        await client.user.update({
+          where: { id: session.user.id },
+          data: { password: hashPassword },
+        });
+      }
     }
     return res.status(200).json({ ok: true });
   }
