@@ -8,16 +8,25 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const { session } = req;
-  if (!session.user) {
-    return res.status(403).json({ ok: false });
-  }
   const user = await client.user.findUnique({ where: { id: session.user.id } });
-  if (!user) {
-    return res.status(403).json({ ok: false });
+  if (req.method === "GET") {
+    if (!user) {
+      return res.status(403).json({ ok: false });
+    }
+    return res.status(200).json({ ok: true, user });
+  } else if (req.method === "POST") {
+    const {
+      query: { type },
+      body,
+    } = req;
+    if (type === "name") {
+      await client.user.update({
+        where: { id: session.user.id },
+        data: { userName: body.userName },
+      });
+    }
+    return res.status(200).json({ ok: true });
   }
-  return res.status(200).json({ ok: true, user });
 }
 
-export default withSession(
-  withHandler({ method: ["GET"], handler, isPrivate: false })
-);
+export default withSession(withHandler({ method: ["GET", "POST"], handler }));
